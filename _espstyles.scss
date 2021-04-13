@@ -1,0 +1,105 @@
+@use "sass:color";
+
+
+
+// Colors
+$primary: hsl(349, 71%, 36%);
+// $secondary: hsl(205, 59%, 58%); // MH secondary color
+$secondary: hsl(205, 59%, 50%);
+$borderColor: color.adjust($secondary, $lightness: -10%);
+
+@function getElementTextColor() {
+    @if color.lightness($secondary) > 55% {
+        @return color.adjust($secondary, $lightness: -100%);
+    }
+    @else if color.lightness($secondary) <= 55% {
+        @return color.adjust($secondary, $lightness: +100%);
+    }
+}
+
+@function getElementHoverColor() {
+    @if color.lightness($secondary) < 55% {
+        @return color.adjust($secondary, $lightness: -10%);
+    }
+    @else if color.lightness($secondary) >= 55% {
+        @return color.adjust($secondary, $lightness: +10%);
+    }
+ 
+}
+
+$elementTextColor: getElementTextColor();
+$linkHover: getElementHoverColor();
+$buttonShadow: hsl(0, 0%, 33%);
+
+* { font-family: Helvetica, sans-serif; }
+
+// Elements
+.title {
+	text-align: center;
+    margin-top: 0;
+	padding: 0.5em 0;
+	color: $elementTextColor;
+	background-color: $primary;
+	border-bottom: 2px solid color.adjust($primary, $lightness: -15%);
+    font-size: 2em;
+    font-weight: 600;
+    line-height: 1.125;
+}
+
+.box-raised {
+    display: flex;
+    justify-content: space-between;
+    padding: 1.25em;
+	margin-bottom: 1em;;
+	background-color: white;
+    border-radius: 6px;
+    box-shadow: inset -2px -1px 0px 2px hsl(0, 0%, 83%), 1px 2px 4px 0 hsl(0 0% 33%);
+    color: $elementTextColor;
+}
+
+.btn {
+    justify-content: center;
+    text-align: center;
+	background-color: $secondary;
+    color: $elementTextColor;
+    border-color: $borderColor;
+    border-width: 1px;
+	border-radius: 0.25em;
+    cursor: pointer;
+	padding: calc(0.5rem - 1px) 1em;
+    white-space: nowrap;
+    box-shadow: 1px 1px 5px 0px grey;
+
+	&:hover {
+		background-color: $linkHover;
+
+        &:active {
+            box-shadow: none;
+        }
+    }
+}
+
+.input {
+	justify-content: center;
+    text-align: center;
+    color: rgb(15, 15, 15);
+    border-color: $borderColor;
+    border-width: 1px;
+	border-radius: 0.25em;
+    cursor: text;
+	padding: calc(0.5rem - 1px) 1em;
+    white-space: nowrap;
+
+    &::placeholder {
+        color: hsl(0, 0%, 45%);
+        opacity: 1;
+    }
+}
+
+.dropdown {
+    text-align: center;
+    border-width: 1px;
+	border-radius: 0.25em;	
+    cursor: pointer;
+	padding: calc(0.5rem - 1px) 1em;
+    white-space: nowrap;

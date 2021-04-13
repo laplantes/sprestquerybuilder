@@ -1,0 +1,10 @@
+.container-app-main {
+	display: flex;
+	justify-content: space-between;
+	width: 90vw;
+	margin: 0 auto;
+
+	& > div {
+		width: 48%;
+	}
+}

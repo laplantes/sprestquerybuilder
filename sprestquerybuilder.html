@@ -10,66 +10,103 @@
 <body>
 	<div class="app">
 		<h1 class="title">SharePoint REST Query Builder</h1>
-		<article class="message is-small">
-			<div class="message-header">
+		<article class="info-bar notice">
+			<div class="notice-header">
 				<p>Notice</p>
-				<button class="delete" aria-label="delete"></button>
+				<div class="close" aria-label="close">
+					<span>&#43;</span>
+				</div>
 			</div>
-			<div class="message-body">
+			<div class="notice-body">
 				Lorem ipsum dolor sit amet, consectetur adipiscing elit. In mollis lectus. Donec sodales, arcu et
-				sollicitudin porttitor, tortor urna tempor ligula, id porttitor mi magna a neque. Donec dui urna, vehicula et
-				sem eget, facilisis sodales sem.
+				sollicitudin porttitor, tortor urna tempor ligula
 			</div>
 		</article>
 		<div class="container-app-main">
 			<div class="container-build-query">
+
 				<div class="container-query-type box-raised">
-					<input class="input" type="text" placeholder="Enter column name">
-					<div>
+					<div class="container-query-inputs">
+						<input class="input" type="text" placeholder="Enter column name">
 						<input class="input" type="text" placeholder="Enter value">
 					</div>
-					<button class="btn">Add to query</button>
+					<div class="container-query-button">
+						<button class="btn">Add to query</button>
+					</div>
+
 				</div>
+
 				<div class="container-query-type box-raised">
-					<input class="input" type="text" placeholder="Enter column name">
-					<select class="dropdown" name="filter-operator" id="filter-operator">
-						<option disabled selected value> -- select an option -- </option>
-						<option value="eq">Equal</option>
-						<option value="ne">Not equal</option>
-						<option value="gt">Greater than</option>
-						<option value="ge">Greater than or equal</option>
-						<option value="lt">Less than</option>
-						<option value="le">Greater than or equal</option>
-						<option value="gt">not</option>
-					</select>
-					<input class="input" type="text" placeholder="Enter value">
-					<button class="btn">Add to query</button>
+					<div class="container-query-inputs">
+						<input class="input" type="text" placeholder="Enter column name">
+						<select class="dropdown" name="filter-operator" id="filter-operator">
+							<option disabled selected value> -- select an option -- </option>
+							<option value="eq">Equal</option>
+							<option value="ne">Not equal</option>
+							<option value="gt">Greater than</option>
+							<option value="ge">Greater than or equal</option>
+							<option value="lt">Less than</option>
+							<option value="le">Greater than or equal</option>
+							<option value="gt">not</option>
+						</select>
+						<input class="input" type="text" placeholder="Enter value">
+					</div>
+					<div class="container-query-button">
+						<button class="btn">Add to query</button>
+					</div>
 				</div>
+
 				<div class="container-query-type box-raised">
-					<input class="input" type="text" placeholder="Enter column name">
-					<button class="btn">Add to query</button>
+					<div class="container-query-inputs">
+						<input class="input" type="text" placeholder="Enter column name">
+					</div>
+					<div class="container-query-button">
+						<button class="btn">Add to query</button>
+					</div>
+
 				</div>
+
 				<div class="container-query-type box-raised">
-					<input class="input" type="text" placeholder="Enter column name">
-					<button class="btn">Add to query</button>
+					<div class="container-query-inputs">
+						<input class="input" type="text" placeholder="Enter column name">
+					</div>
+					<div class="container-query-button">
+						<button class="btn">Add to query</button>
+					</div>
+
 				</div>
+
 				<div class="container-query-type box-raised">
-					<div>Number of results</div>
-					<input class="input" type="number" min="1" placeholder="100">
-					<button class="btn">Add to query</button>
+					<div class="container-query-inputs">
+						<div class="inputLabel">Number of results</div>
+						<input class="input" type="number" min="1" placeholder="100">
+					</div>
+					<div class="container-query-button">
+						<button class="btn">Add to query</button>
+					</div>
+
 				</div>
 			</div>
+
 			<div class="container-results-query">
 				<div class="container-query-items box-raised"></div>
-				<button class="btn">Generate Query</button>
-				<div>down cheverons</div>
+				<div>
+					<button class="btn">Generate Query</button>
+				</div>
+				<div class="container-chevron">
+					<div class="chevron-down"></div>
+					<div class="chevron-down"></div>
+					<div class="chevron-down"></div>
+				</div>
 				<textarea name="query" id="query" cols="30" rows="10"></textarea>
 				<div class="container-url-test">
-					<input class="input" type="text" class="test-url" id="test-url">
+					<input class="input" type="text" class="test-url" id="test-url" placeholder="Enter URL">
 					<button class="btn">TEST</button>
 				</div>
 			</div>
+
 		</div>
+		
 		<footer class="footer"></footer>
 	</div>
 <script src="sprestquerybuilder.js"></script>

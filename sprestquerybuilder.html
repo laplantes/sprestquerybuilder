@@ -10,10 +10,10 @@
 <body>
 	<div class="app">
 		<h1 class="title">SharePoint REST Query Builder</h1>
-		<article class="info-bar notice">
+		<article id="info-bar" class="info-bar notice">
 			<div class="notice-header">
 				<p>Notice</p>
-				<div class="close" aria-label="close">
+				<div id="close-notice" class="close" aria-label="close">
 					<span>&#43;</span>
 				</div>
 			</div>
@@ -24,73 +24,87 @@
 		</article>
 		<div class="container-app-main">
 			<div class="container-build-query">
-
-				<div class="container-query-type box-raised">
-					<div class="container-query-inputs">
-						<input class="input" type="text" placeholder="Enter column name">
-						<input class="input" type="text" placeholder="Enter value">
-					</div>
-					<div class="container-query-button">
-						<button class="btn">Add to query</button>
-					</div>
-
-				</div>
-
-				<div class="container-query-type box-raised">
-					<div class="container-query-inputs">
-						<input class="input" type="text" placeholder="Enter column name">
-						<select class="dropdown" name="filter-operator" id="filter-operator">
-							<option disabled selected value> -- select an option -- </option>
-							<option value="eq">Equal</option>
-							<option value="ne">Not equal</option>
-							<option value="gt">Greater than</option>
-							<option value="ge">Greater than or equal</option>
-							<option value="lt">Less than</option>
-							<option value="le">Greater than or equal</option>
-							<option value="gt">not</option>
-						</select>
-						<input class="input" type="text" placeholder="Enter value">
-					</div>
-					<div class="container-query-button">
-						<button class="btn">Add to query</button>
-					</div>
-				</div>
-
-				<div class="container-query-type box-raised">
-					<div class="container-query-inputs">
-						<input class="input" type="text" placeholder="Enter column name">
-					</div>
-					<div class="container-query-button">
-						<button class="btn">Add to query</button>
-					</div>
-
-				</div>
-
-				<div class="container-query-type box-raised">
-					<div class="container-query-inputs">
-						<input class="input" type="text" placeholder="Enter column name">
-					</div>
-					<div class="container-query-button">
-						<button class="btn">Add to query</button>
-					</div>
-
-				</div>
-
-				<div class="container-query-type box-raised">
-					<div class="container-query-inputs">
-						<div class="inputLabel">Number of results</div>
-						<input class="input" type="number" min="1" placeholder="100">
-					</div>
-					<div class="container-query-button">
-						<button class="btn">Add to query</button>
-					</div>
-
-				</div>
-			</div>
-
-			<div class="container-results-query">
-				<div class="container-query-items box-raised"></div>
 				<div>
+					<h3 class="title-query">Add a select item</h3>
+				<div class="container-query-type box-raised">
+					<div class="container-query-inputs">
+						<input class="input" type="text" placeholder="Enter column name">
+						<input class="input" type="text" placeholder="Enter value">
+					</div>
+					<div class="container-query-button">
+						<button class="btn">Add to query</button>
+					</div>
+				</div>
+				</div>
+
+				<div>
+					<h3 class="title-query">Add a filter item</h3>
+					<div class="container-query-type box-raised">
+						<div class="container-query-inputs">
+							<input class="input" type="text" placeholder="Enter column name">
+							<select class="dropdown" name="filter-operator" id="filter-operator">
+								<option disabled selected value> -- select an option -- </option>
+								<option value="eq">Equal</option>
+								<option value="ne">Not equal</option>
+								<option value="gt">Greater than</option>
+								<option value="ge">Greater than or equal</option>
+								<option value="lt">Less than</option>
+								<option value="le">Greater than or equal</option>
+								<option value="gt">not</option>
+							</select>
+							<input class="input" type="text" placeholder="Enter value">
+						</div>
+						<div class="container-query-button">
+							<button class="btn">Add to query</button>
+						</div>
+					</div>
+				</div>
+
+				<div>
+					<h3 class="title-query">Add a date filter</h3>
+					<div class="container-query-type box-raised">
+						<div class="container-query-inputs">
+							<input class="input" type="text" placeholder="Enter column name">
+						</div>
+						<div class="container-query-button">
+							<button class="btn">Add to query</button>
+						</div>
+					</div>
+				</div>
+
+				<div>
+					<h3 class="title-query">Add an orderby</h3>
+					<div class="container-query-type box-raised">
+						<div class="container-query-inputs">
+							<input class="input" type="text" placeholder="Enter column name">
+						</div>
+						<div class="container-query-button">
+							<button class="btn">Add to query</button>
+						</div>
+					</div>
+				</div>
+
+				<div>
+					<h3 class="title-query">Add a top</h3>
+					<div class="container-query-type box-raised">
+						<div class="container-query-inputs">
+							<div class="inputLabel">Number of results</div>
+							<input class="input" type="number" min="1" placeholder="100">
+						</div>
+						<div class="container-query-button">
+							<button class="btn">Add to query</button>
+						</div>
+					</div>
+				</div>
+
+			</div>
+			
+			<div class="container-results-query">
+				<div class="container-query-current">
+					<h3 class="title-query">Current query items</h3>
+					<div class="query-box box-inset"></div>
+				</div>
+				<div class="center-child">
 					<button class="btn">Generate Query</button>
 				</div>
 				<div class="container-chevron">
@@ -98,7 +112,7 @@
 					<div class="chevron-down"></div>
 					<div class="chevron-down"></div>
 				</div>
-				<textarea name="query" id="query" cols="30" rows="10"></textarea>
+				<div id="query" class="query-box box-inset"></div>
 				<div class="container-url-test">
 					<input class="input" type="text" class="test-url" id="test-url" placeholder="Enter URL">
 					<button class="btn">TEST</button>

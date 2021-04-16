@@ -1,5 +1,12 @@
 @use 'settings';
 
+.app {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	height: 100vh;
+}
+
 .container-app-main {
 	display: flex;
 	flex-wrap: wrap;
@@ -11,7 +18,7 @@
 	& > div {
 		margin: 0.5rem;
 		width: clamp(20rem, 48%, 60rem);
-		height: 40rem;
+		min-height: 40rem;
 		display: flex;
 		flex-direction: column;
 		justify-content: space-between;
@@ -20,6 +27,18 @@
 
 .info-bar {
 	width: clamp(15rem, 95vw, 120rem);
+	transition: all 0.5s ease-in-out;
+	margin: 0 auto;
+}
+
+.info-bar-hidden {
+	opacity: 0;
+	visibility: hidden;
+}
+
+.title-query {
+	margin-bottom: 0.25rem;
+	text-decoration: underline;
 }
 
 .container-query-type {
@@ -47,14 +66,15 @@
 }
 
 .container-results-query {
-	outline: 1px solid blue;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
 }
 
-.container-query-items {
-	height: 10rem;
+.query-box {
+	height: 12rem;
+    width: 100%;
+	overflow: auto;
 }
 
 .container-chevron {
@@ -64,16 +84,31 @@
 	margin: 0 auto;
 }
 
+.container-url-test {
+	display: flex;
+	justify-content: space-around;
 
-@media all and (max-width: 850px) {
-	.container-app-main {
+	& > * {
+		margin: 0 0.5rem;
+	}
 
-	& > div {
-		width: clamp(20rem, 48%, 60rem);
-		height: auto;
-		display: block;
+	& :first-child {
+		flex-grow: 1;
 	}
 }
+
+// Media queries
+@media all and (max-width: 850px) {
+	
+	.container-app-main {
+		width: auto;
+
+		& > div {
+			width: 100%;
+			height: auto;
+			display: block;
+		}
+	}
 
 	.container-query-type {
 
@@ -88,4 +123,11 @@
 		}
 	}
 
+	.container-query-current {
+		margin-bottom: 1rem;
+	}
+
+	.container-url-test {
+		margin-top: 1rem
+	}
 }

@@ -1,10 +1,91 @@
+@use 'settings';
+
 .container-app-main {
 	display: flex;
+	flex-wrap: wrap;
 	justify-content: space-between;
-	width: 90vw;
+	width: clamp(40rem, 95vw, 120rem);
+	font-size: 0.9rem;
 	margin: 0 auto;
 
 	& > div {
-		width: 48%;
+		margin: 0.5rem;
+		width: clamp(20rem, 48%, 60rem);
+		height: 40rem;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
 	}
+}
+
+.info-bar {
+	width: clamp(15rem, 95vw, 120rem);
+}
+
+.container-query-type {
+
+	& > * {
+		padding: 1.25rem;
+	}
+}
+
+.container-query-inputs {
+	display: flex;
+	justify-content: center;
+	flex-wrap: wrap;
+	gap: 1rem;
+}
+
+.container-query-button {
+	display: flex;
+	justify-content: flex-end;
+	flex-grow: 1;
+}
+
+.inputLabel {
+	padding: settings.$elementCalculatedPadding settings.$elementCalculatedPadding settings.$elementCalculatedPadding 0;
+}
+
+.container-results-query {
+	outline: 1px solid blue;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.container-query-items {
+	height: 10rem;
+}
+
+.container-chevron {
+	display: flex;
+	justify-content: space-around;
+	width: 30%;
+	margin: 0 auto;
+}
+
+
+@media all and (max-width: 850px) {
+	.container-app-main {
+
+	& > div {
+		width: clamp(20rem, 48%, 60rem);
+		height: auto;
+		display: block;
+	}
+}
+
+	.container-query-type {
+
+		& div {
+			width: 100%;
+		}
+		
+		& > div > * {
+			width: 90%;
+			text-align: center;
+			margin: 0 auto;
+		}
+	}
+
 }

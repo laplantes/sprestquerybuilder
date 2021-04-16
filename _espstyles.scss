@@ -1,12 +1,16 @@
 @use "sass:color";
 
+* { font-family: Helvetica, sans-serif; }
 
+$borderRadius: 0.25rem;
 
 // Colors
-$primary: hsl(349, 71%, 36%);
-// $secondary: hsl(205, 59%, 58%); // MH secondary color
-$secondary: hsl(205, 59%, 50%);
+$primary: hsl(349, 71%, 36%); // MH Brand color
+$secondary: hsl(205, 59%, 58%); // MH secondary color
+// $secondary: hsl(205, 59%, 50%);
 $borderColor: color.adjust($secondary, $lightness: -10%);
+$noticeBackgroundColor: hsl(31, 17%, 62%); // MH Brand color
+
 
 @function getElementTextColor() {
     @if color.lightness($secondary) > 55% {
@@ -17,6 +21,24 @@ $borderColor: color.adjust($secondary, $lightness: -10%);
     }
 }
 
+@function getTitleTextColor() {
+    @if color.lightness($primary) > 55% {
+        @return color.adjust($primary, $lightness: -100%);
+    }
+    @else if color.lightness($primary) <= 55% {
+        @return color.adjust($primary, $lightness: +100%);
+    }
+}
+
+@function getNoticeTextColor() {
+	@if color.lightness($noticeBackgroundColor) > 55% {
+		@return color.adjust($noticeBackgroundColor, $lightness: -100%);
+	}
+	@else if color.lightness($noticeBackgroundColor) <= 55% {
+		@return color.adjust($noticeBackgroundColor, $lightness: +100%);
+	}
+}
+
 @function getElementHoverColor() {
     @if color.lightness($secondary) < 55% {
         @return color.adjust($secondary, $lightness: -10%);
@@ -24,23 +46,22 @@ $borderColor: color.adjust($secondary, $lightness: -10%);
     @else if color.lightness($secondary) >= 55% {
         @return color.adjust($secondary, $lightness: +10%);
     }
- 
 }
+
 
 $elementTextColor: getElementTextColor();
 $linkHover: getElementHoverColor();
 $buttonShadow: hsl(0, 0%, 33%);
 
-* { font-family: Helvetica, sans-serif; }
 
 // Elements
 .title {
 	text-align: center;
     margin-top: 0;
 	padding: 0.5em 0;
-	color: $elementTextColor;
+	color: getTitleTextColor();
 	background-color: $primary;
-	border-bottom: 2px solid color.adjust($primary, $lightness: -15%);
+	border-bottom: 2px solid color.adjust($primary, $lightness: -10%);
     font-size: 2em;
     font-weight: 600;
     line-height: 1.125;
@@ -48,13 +69,17 @@ $buttonShadow: hsl(0, 0%, 33%);
 
 .box-raised {
     display: flex;
+	flex-wrap: wrap;
     justify-content: space-between;
-    padding: 1.25em;
-	margin-bottom: 1em;;
-	background-color: white;
-    border-radius: 6px;
-    box-shadow: inset -2px -1px 0px 2px hsl(0, 0%, 83%), 1px 2px 4px 0 hsl(0 0% 33%);
     color: $elementTextColor;
+	background-color: white;
+	border-radius: $borderRadius;
+	box-shadow: inset -2px -1px 0px 2px hsl(0, 0%, 83%), 1px 2px 4px 0 hsl(0 0% 33%);
+	filter: drop-shadow(2px 4px 3px #545454);
+	
+	&:not(:last-child) {
+		margin-bottom: 1em;
+	}
 }
 
 .btn {
@@ -64,11 +89,12 @@ $buttonShadow: hsl(0, 0%, 33%);
     color: $elementTextColor;
     border-color: $borderColor;
     border-width: 1px;
-	border-radius: 0.25em;
+	border-radius: $borderRadius;
     cursor: pointer;
-	padding: calc(0.5rem - 1px) 1em;
+	padding: calc(0.5rem - 1px) 1rem;
     white-space: nowrap;
     box-shadow: 1px 1px 5px 0px grey;
+	transition: background-color 0.4s ease-in-out;
 
 	&:hover {
 		background-color: $linkHover;
@@ -85,9 +111,9 @@ $buttonShadow: hsl(0, 0%, 33%);
     color: rgb(15, 15, 15);
     border-color: $borderColor;
     border-width: 1px;
-	border-radius: 0.25em;
+	border-radius: $borderRadius;
     cursor: text;
-	padding: calc(0.5rem - 1px) 1em;
+	padding: calc(0.5rem - 1px) 1rem;
     white-space: nowrap;
 
     &::placeholder {
@@ -99,7 +125,82 @@ $buttonShadow: hsl(0, 0%, 33%);
 .dropdown {
     text-align: center;
     border-width: 1px;
-	border-radius: 0.25em;	
+	border-radius: $borderRadius;
     cursor: pointer;
+	border-color: #3286c3;
 	padding: calc(0.5rem - 1px) 1em;
     white-space: nowrap;
+}
+
+.notice {
+	width: 90%;
+	margin: 0 auto 1rem auto;
+	background-color: $noticeBackgroundColor;
+	color: getNoticeTextColor();
+	border-radius: $borderRadius;
+	border-left: 5px solid color.adjust($noticeBackgroundColor, $lightness: -15%);
+	border-bottom: 2px solid color.adjust($noticeBackgroundColor, $lightness: -15%);
+
+	.notice-header  {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		margin: 0 auto 0.5rem auto;
+		padding: 0.25rem 0.25rem 0 1rem;
+
+		> p {
+			margin: 0;
+			font-weight: 900;
+			font-size: 1.25rem;
+			border-bottom: 1px solid;
+		}
+		
+		.close {
+			width: 1.25rem;
+			height: 1.25rem;
+			font-size: 1.25rem;
+			font-weight: 900;
+			border: 2px solid color.adjust($noticeBackgroundColor, $lightness: -15%);
+			border-radius: 50%;
+			transform: rotate(45deg);
+			transition: border 0.4s ease-in-out;
+			
+			&:hover {
+				border: 2px solid;
+			}
+
+			& > span {
+				cursor: pointer;
+				display: flex;
+				align-items: center;
+				height: 0.925rem;
+				justify-content: center;
+			}
+		}
+	}
+
+	.notice-body {
+		width: 95%;
+		margin: 0 auto;
+	}
+}
+
+.chevron-down {
+  display: inline-block;
+  margin: 0.4rem 0 2rem 0;
+  border-right: 4px solid black;
+  border-bottom: 4px solid black;
+  width: 1.5rem; height: 1.5rem;
+  transform: rotate(-315deg);
+  
+  &::after {
+  position: relative;
+  margin-left: .5rem;
+  content: "";
+  display: inline-block;
+  border-right: 4px solid black;
+  border-bottom: 4px solid black;
+  width: 1.5rem; height: 1.5rem;
+  top: .5rem;
+  }
+}

@@ -1,0 +1,1 @@
+document.getElementById('close-notice').addEventListener('click', () => { console.log('clicked');document.getElementById('info-bar').classList.add('info-bar-hidden') } )

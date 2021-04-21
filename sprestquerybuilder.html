@@ -10,16 +10,15 @@
 <body>
 	<div class="app">
 		<h1 class="title">SharePoint REST Query Builder</h1>
-		<article id="info-bar" class="info-bar notice">
+		<article class="info-bar notice">
 			<div class="notice-header">
 				<p>Notice</p>
 				<div id="close-notice" class="close" aria-label="close">
 					<span>&#43;</span>
 				</div>
 			</div>
-			<div class="notice-body">
-				Lorem ipsum dolor sit amet, consectetur adipiscing elit. In mollis lectus. Donec sodales, arcu et
-				sollicitudin porttitor, tortor urna tempor ligula
+			<div id="info-bar-body"class="info-bar-body notice-body">
+				Messages will appear here
 			</div>
 		</article>
 		<div class="container-app-main">
@@ -32,7 +31,7 @@
 						<input class="input" type="text" placeholder="Enter value">
 					</div>
 					<div class="container-query-button">
-						<button class="btn">Add to query</button>
+						<button id="add-select-item" class="btn">Add to query</button>
 					</div>
 				</div>
 				</div>
@@ -55,7 +54,7 @@
 							<input class="input" type="text" placeholder="Enter value">
 						</div>
 						<div class="container-query-button">
-							<button class="btn">Add to query</button>
+							<button id="add-filter-item" class="btn">Add to query</button>
 						</div>
 					</div>
 				</div>
@@ -67,7 +66,7 @@
 							<input class="input" type="text" placeholder="Enter column name">
 						</div>
 						<div class="container-query-button">
-							<button class="btn">Add to query</button>
+							<button id="add-date-filter-item" class="btn">Add to query</button>
 						</div>
 					</div>
 				</div>
@@ -79,7 +78,7 @@
 							<input class="input" type="text" placeholder="Enter column name">
 						</div>
 						<div class="container-query-button">
-							<button class="btn">Add to query</button>
+							<button id="add-orderby-item" class="btn">Add to query</button>
 						</div>
 					</div>
 				</div>
@@ -92,7 +91,7 @@
 							<input class="input" type="number" min="1" placeholder="100">
 						</div>
 						<div class="container-query-button">
-							<button class="btn">Add to query</button>
+							<button id="add-top-item" class="btn">Add to query</button>
 						</div>
 					</div>
 				</div>
@@ -102,10 +101,15 @@
 			<div class="container-results-query">
 				<div class="container-query-current">
 					<h3 class="title-query">Current query items</h3>
-					<div class="query-box box-inset"></div>
+					<div class="query-box box-inset">
+						<div class="box-item">
+							<div>Coulmn name</div>
+							<span>X</span>
+						</div>
+					</div>
 				</div>
 				<div class="center-child">
-					<button class="btn">Generate Query</button>
+					<button id="generate-query" class="btn">Generate Query</button>
 				</div>
 				<div class="container-chevron">
 					<div class="chevron-down"></div>
@@ -114,8 +118,8 @@
 				</div>
 				<div id="query" class="query-box box-inset"></div>
 				<div class="container-url-test">
-					<input class="input" type="text" class="test-url" id="test-url" placeholder="Enter URL">
-					<button class="btn">TEST</button>
+					<input class="input" type="text" class="test-url" placeholder="Enter URL">
+					<button id="test-url" class="btn">TEST</button>
 				</div>
 			</div>
 

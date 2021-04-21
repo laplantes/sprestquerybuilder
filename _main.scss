@@ -29,11 +29,10 @@
 	width: clamp(15rem, 95vw, 120rem);
 	transition: all 0.5s ease-in-out;
 	margin: 0 auto;
-}
 
-.info-bar-hidden {
-	opacity: 0;
-	visibility: hidden;
+	& .info-bar-body {
+		min-height: 1.5rem;
+	}
 }
 
 .title-query {
@@ -74,6 +73,7 @@
 .query-box {
 	height: 12rem;
     width: 100%;
+	padding: 0.5rem;
 	overflow: auto;
 }
 

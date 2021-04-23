@@ -1,21 +1,69 @@
 'use strict';
 
-let selects = [],
+let selects = {},
+	selectCount = 0,
 	filters = {},
-	orderby = ``,
-	top = ``;
+	filtersCount = 0,
+	orderBy = ``,
+	topNumber;
+
+const clearInfoBar = () => {
+	document.getElementById('info-bar-body').innerText='';
+};
+
+const displayMessage = (message) => {
+	let content = document.getElementById('info-bar-body').innerText='';
+	if (content) {
+		clearInfoBar();
+		document.getElementById('info-bar-body').innerText=`${message}`
+	} else {
+		document.getElementById('info-bar-body').innerText=`${message}`
+	}
+};
+
+const buildItemHtml = (type, itemData) => {
+	switch(type) {
+		case 'select':
+			return `
+				<div  id="${type}-${itemData.id}" class="box-item">
+					<div><b>${type}:</b> ${itemData.value}</div>
+					<span>X</span>
+				</div>
+			`;
+		default:
+		console.log("error");
+		break;
+	}
+};
+
+const addSelect = () => {
+	clearInfoBar();
+	// get the select input value
+	const selectValue = document.getElementById('select-column-name').value;
+	if (selectValue) {
+		const newSelect = {id: selectCount, value: selectValue};
+		// clear the input in the form
+		document.getElementById('select-column-name').value="";
+		const newSelectHtml = buildItemHtml(`select`, newSelect);
+		document.getElementById('query-box-preview').insertAdjacentHTML('beforeend', newSelectHtml);
+		// add the new select into the selects object
+		selects[`${selectCount}`] = newSelect;
+		const newSelectItem = document.getElementById(`select-${selectCount}`);
+		document.getElementById(`select-${selectCount}`).childNodes[3].addEventListener('click', () => { newSelectItem.remove(); delete selects[`${newSelect.id}`]; });
+		selectCount++;
+	} else {
+		displayMessage(`Please enter a column name to add to the select query`);
+	}
+};
 
 // add event listeners for buttons
-
+// ################################
 // Clear the info bar message body
-document.getElementById('close-notice').addEventListener('click', () => {
-	console.log('clicked');
-	document.getElementById('info-bar-body').innerText='';
-});
+document.getElementById('close-notice').addEventListener('click', clearInfoBar);
 
 // Click event for select button
 document.getElementById('add-select-item').addEventListener('click', () => {
-	console.log('Add select item clicked');
+	addSelect();
 });
 
 // Click event for filter button

@@ -102,15 +102,18 @@ $buttonShadow: hsl(0, 0%, 33%);
 .box-item {
 	@include width-fit-content();
 	display: flex;
+	margin: 0.25rem 0.25rem 0 0;
 	background-color: $secondary;
     color: $elementTextColor;
     border-color: $borderColor;
     border-width: 1px;
 	border-radius: $borderRadius;
-	padding: calc(0.25rem - 1px) 0.25rem;
+	padding: 0.25rem;
 	user-select: none;
 
-	& span {
+	& > :last-child {
+		height: 1.2rem;
+		font-size: 0.8rem;
 		margin-left: 0.5rem;
 		background-color: white;
 		padding: 0 0.2rem;
@@ -123,6 +126,7 @@ $buttonShadow: hsl(0, 0%, 33%);
 .btn {
     justify-content: center;
     text-align: center;
+	font-weight: 600;;
 	background-color: $secondary;
     color: $elementTextColor;
     border-color: $borderColor;

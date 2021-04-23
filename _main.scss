@@ -11,8 +11,8 @@
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: space-between;
-	width: clamp(40rem, 95vw, 120rem);
-	font-size: 0.9rem;
+	width: clamp(40rem, 98vw, 120rem);
+	font-size: 0.8rem;
 	margin: 0 auto;
 
 	& > div {
@@ -71,10 +71,13 @@
 }
 
 .query-box {
-	height: 12rem;
-    width: 100%;
+	display: flex;
+	flex-wrap: wrap;
+	min-height: 2rem;
+	max-height: 12rem;
+	max-height: 12rem;
 	padding: 0.5rem;
-	overflow: auto;
+	overflow-y: auto;
 }
 
 .container-chevron {
@@ -95,6 +98,10 @@
 	& :first-child {
 		flex-grow: 1;
 	}
+}
+
+.cushion {
+	flex-grow: 1;
 }
 
 // Media queries

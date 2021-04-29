@@ -73,7 +73,7 @@
 .query-box {
 	display: flex;
 	flex-wrap: wrap;
-	min-height: 2rem;
+	min-height: 3rem;
 	max-height: 12rem;
 	max-height: 12rem;
 	padding: 0.5rem;
@@ -102,6 +102,11 @@
 
 .cushion {
 	flex-grow: 1;
+}
+
+.query-string {
+	width: 100%;
+	border: transparent;
 }
 
 // Media queries

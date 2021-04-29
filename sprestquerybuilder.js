@@ -11,6 +11,17 @@ const clearInfoBar = () => {
 	document.getElementById('info-bar-body').innerText='';
 };
 
+/**
+ * function for clearing the lists contents before displaying new contents
+ * @param  {object} listToClear [the variable that represents the container to clean out]
+ * @return {none}             [none]
+ */
+const clearList = (listToClear) => {
+	while (listToClear.firstChild) {
+		listToClear.removeChild(listToClear.firstChild);
+	}
+};
+
 const displayMessage = (message) => {
 	let content = document.getElementById('info-bar-body').innerText='';
 	if (content) {
@@ -36,24 +47,23 @@ const buildItemHtml = (type, itemData) => {
 	}
 };
 
-const addSelect = () => {
-	clearInfoBar();
-	// get the select input value
-	const selectValue = document.getElementById('select-column-name').value;
-	if (selectValue) {
-		const newSelect = {id: selectCount, value: selectValue};
-		// clear the input in the form
-		document.getElementById('select-column-name').value="";
-		const newSelectHtml = buildItemHtml(`select`, newSelect);
-		document.getElementById('query-box-preview').insertAdjacentHTML('beforeend', newSelectHtml);
-		// add the new select into the selects object
-		selects[`${selectCount}`] = newSelect;
-		const newSelectItem = document.getElementById(`select-${selectCount}`);
-		document.getElementById(`select-${selectCount}`).childNodes[3].addEventListener('click', () => { newSelectItem.remove(); delete selects[`${newSelect.id}`]; });
-		selectCount++;
-	} else {
-		displayMessage(`Please enter a column name to add to the select query`);
+const buildQueryString = (querystringSelects='', querystringFilters=``, listLibrayyName) => {
+	let filtersArray = [],
+		fullQueryString = `?`;
+
+	if (querystringSelects) {
+		let selectsArray = [];
+		// Populate the contents of the selectsArray
+		for (const item of Object.entries(querystringSelects)) {
+		selectsArray.push(item[1].value)
+		}
+		const selectsString= selectsArray.join(',');
+		fullQueryString +=`select=`;
+		fullQueryString += `${selectsString}`;
+
 	}
+
+	return fullQueryString;
 };
 
 // add event listeners for buttons
@@ -63,7 +73,33 @@ document.getElementById('close-notice').addEventListener('click', clearInfoBar);
 
 // Click event for select button
 document.getElementById('add-select-item').addEventListener('click', () => {
-	addSelect();
+	// addSelect();
+
+	// Clear the info bar if there is a current message
+	(document.getElementById('info-bar-body').innerText='') ? clearInfoBar() : false;
+	// get the select input value
+	const selectValue = document.getElementById('select-column-name').value;
+	// Ensure there is content to add
+	if (selectValue) {
+		// Build the new object using the global selectCount and the functionally scoped selectValue
+		const newSelect = {id: selectCount, value: selectValue};
+		// Call the function to build out the required HTML to add the select to the page
+		const newSelectHtml = buildItemHtml(`select`, newSelect);
+		// Insert the newly created HTML
+		document.getElementById('query-box-preview').insertAdjacentHTML('beforeend', newSelectHtml);
+		// add the new select into the selects object
+		selects[`${selectCount}`] = newSelect;
+		// Get the newly created HTML element
+		const newSelectItem = document.getElementById(`select-${selectCount}`);
+		// Add an event listener to the newly created items remove button for removing the item from the page and from the selects object
+		document.getElementById(`select-${selectCount}`).childNodes[3].addEventListener('click', () => { newSelectItem.remove(); delete selects[`${newSelect.id}`]; });
+		// clear the input in the form in preperation for the next item to be added
+		document.getElementById('select-column-name').value="";
+		// Increment the select counter		
+		selectCount++;
+	} else {
+		displayMessage(`Please enter a column name to add to the select query`);
+	}
 });
 
 // Click event for filter button
@@ -89,9 +125,21 @@ document.getElementById('add-top-item').addEventListener('click', () => {
 // Click event for generate query button
 document.getElementById('generate-query').addEventListener('click', () => {
 	console.log('Generate Query clicked');
+	const queryContainer = document.getElementById('query');
+	(queryContainer.childElementCount > 0) ? clearList(queryContainer) : false;
+	const queryHtml = buildQueryString(selects, filters);
+	queryContainer.insertAdjacentHTML('afterbegin', queryHtml);
 });
 
 // Click event for test url button
 document.getElementById('test-url').addEventListener('click', () => {
 	console.log('Test URL clicked');
+});
+
+document.getElementById('copy-query').addEventListener('click', () => {
+	const areaToCopy = document.getElementById('query-string');
+	areaToCopy.select();
+	areaToCopy.setSelectionRange(0, 99999);
+	document.execCommand("copy");
+	console.log('The copied text value is: ', areaToCopy.value);
 });

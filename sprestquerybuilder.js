@@ -22,6 +22,14 @@ const clearList = (listToClear) => {
 	}
 };
 
+const showToast = (title=`Enter a title`, message=`Enter a message, even a short one, but a long one is ok as well.`) => {
+	document.getElementById('toast-title').innerText = title;
+	document.getElementById('toast-message').innerText = message;
+    const element = document.getElementById('toast')
+    element.classList.add('show');
+    setTimeout(() => { element.classList.remove('show'); }, 5000);
+}
+
 const displayMessage = (message) => {
 	let content = document.getElementById('info-bar-body').innerText='';
 	if (content) {
@@ -99,6 +107,7 @@ document.getElementById('add-select-item').addEventListener('click', () => {
 		selectCount++;
 	} else {
 		displayMessage(`Please enter a column name to add to the select query`);
+		showToast(`Attention`, `Please enter a column name to add to the select query`);
 	}
 });
 

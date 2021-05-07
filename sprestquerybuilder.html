@@ -10,7 +10,8 @@
 <body>
 	<div class="app">
 		<h1 class="title">SharePoint REST Query Builder</h1>
-		<article class="info-bar notice">
+		<!-- TODO: Add below to documentation, then remove the info bar below -->
+		<article class="info-bar notice" style="display: none;">
 			<div class="notice-header">
 				<p>Notice</p>
 				<div id="close-notice" class="close" aria-label="close">
@@ -21,9 +22,9 @@
 				Messages will appear here
 			</div>
 		</article>
-		<div class="cushion"></div>
+		<!-- <div class="cushion"></div> -->
 		<div class="container-app-main">
-			<div class="container-build-query">
+			<div>
 
 				<div>
 					<h3 class="title-query">Add a select item</h3>
@@ -119,6 +120,7 @@
 					<div id="query-box-preview" class="query-box box-inset"></div>
 				</div>
 				<div class="cushion"></div>
+				<h3 class="title-query">Add a list or library name</h3>
 				<input id="test-list-name" class="input" type="text" class="test-url" placeholder="Enter List or Library Name">
 				<div class="cushion"></div>
 				<div class="center-child">
@@ -131,8 +133,10 @@
 					<div class="chevron-down"></div>
 				</div>
 				<div class="cushion"></div>
+				<h3 class="title-query">Query string</h3>
 				<div id="query" class="query-box box-inset"></div>
 				<div class="cushion"></div>
+				<h3 class="title-query">Enter a URL to test</h3>
 				<div class="container-url-test">
 					<input id="test-url" class="input" type="text" class="test-url" placeholder="Enter URL">
 					<button id="test-url" class="btn">TEST</button>
@@ -144,8 +148,14 @@
 			</div>
 
 		</div>
-		<div class="cushion"></div>
+		<button onclick="showToast()" style="width: 6rem; display: none;">Show Toast</button>
 		<footer class="footer"></footer>
+	</div>
+	<div id="toast" class="toast">
+		<div class="container-toast-contents">
+			<div id="toast-title" class="toast-title"></div>
+			<div id="toast-message" class="toast-message"></div>
+		</div>
 	</div>
 	<script src="sprestquerybuilder.js"></script>
 </body>

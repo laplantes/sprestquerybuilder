@@ -18,6 +18,11 @@ $noticeBackgroundColor: hsl(31, 17%, 62%); // MH Brand color
 	width: fit-content;
 }
 
+@mixin min-width-fit-content {
+	min-width: -moz-fit-content;
+	min-width: fit-content;
+}
+
 // Functions
 @function getElementTextColor() {
     @if color.lightness($secondary) > 55% {
@@ -263,4 +268,104 @@ $buttonShadow: hsl(0, 0%, 33%);
 .center-child {
 	display: flex;
 	justify-content: center;
+}
+
+// Toast Message
+.toast {
+    visibility: hidden;
+	border-radius: $borderRadius;
+    max-width: 6rem;
+    height: 3.5rem;
+    margin: auto;
+    text-align: center;
+	overflow: hidden;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+	right:0;
+    bottom: 2rem;
+    font-size: 1rem;
+}
+.container-toast-contents {
+	display: flex;
+	margin-left: 2rem;
+	margin-right: 2rem;
+}
+.toast-title {
+	padding: 1rem;
+    background-color: #111;
+	border-top-left-radius: $borderRadius;
+	border-bottom-left-radius: $borderRadius;
+
+}
+.toast-message {
+    background-color: #333;
+    padding: 1rem;
+	border-top-right-radius: $borderRadius;
+	border-bottom-right-radius: $borderRadius;
+}
+.show {
+    visibility: visible;
+    -webkit-animation: fadein 0.5s, expand 0.5s 0.5s, textcolor 0.5s 0.5s, stay 3s 1s, shrink 0.5s 2s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, expand 0.5s 0.5s, textcolor 0.5s 0.5s, stay 3s 1s, shrink 0.5s 4s, fadeout 0.5s 4.5s;
+}
+
+@-webkit-keyframes fadein {
+    from {bottom: 0; opacity: 0;} 
+    to {bottom: 2rem; opacity: 1;}
+}
+
+@keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 2rem; opacity: 1;}
+}
+
+@-webkit-keyframes expand {
+    from {min-width: 5rem; height: 3.5rem;} 
+    to {min-width: fit-content; height: auto; }
+}
+
+@keyframes expand {
+    from {min-width: 5rem; height: 3.5rem;}
+    to {@include min-width-fit-content; height: auto;}
+}
+
+@-webkit-keyframes textcolor {
+	from {color: transparent;}
+	to {color: white;}
+}
+
+@keyframes textcolor {
+	from {color: transparent;}
+	to {color: white;}
+}
+
+@-webkit-keyframes stay {
+    from {min-width: fit-content; color: white; height: auto;} 
+    to {min-width: fit-content; color: white; height: auto;}
+}
+
+@keyframes stay {
+    from {@include min-width-fit-content; color: white; height: auto;}
+    to {@include min-width-fit-content; color: white; height: auto;}
+}
+
+@-webkit-keyframes shrink {
+    from {min-width: fit-content;} 
+    to {min-width: 5rem;}
+}
+
+@keyframes shrink {
+    from {@include min-width-fit-content;} 
+    to {min-width: 5rem;}
+}
+
+@-webkit-keyframes fadeout {
+    from {bottom: 2rem; opacity: 1;} 
+    to {bottom: 3.5rem; opacity: 0;}
+}
+
+@keyframes fadeout {
+    from {bottom: 2rem; opacity: 1;}
+    to {bottom: 3.5rem; opacity: 0;}
 }

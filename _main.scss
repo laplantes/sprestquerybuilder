@@ -9,6 +9,7 @@
 
 .container-app-main {
 	display: flex;
+	flex-basis: 85vh;
 	flex-wrap: wrap;
 	justify-content: space-between;
 	width: clamp(40rem, 98vw, 120rem);
@@ -143,3 +144,4 @@
 		margin-top: 1rem
 	}
 }
+

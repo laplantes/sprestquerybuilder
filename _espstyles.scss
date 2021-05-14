@@ -10,6 +10,8 @@ $secondary: hsl(205, 59%, 58%); // MH secondary color
 // $secondary: hsl(205, 59%, 50%);
 $borderColor: color.adjust($secondary, $lightness: -10%);
 $noticeBackgroundColor: hsl(31, 17%, 62%); // MH Brand color
+$toastTitleBackgroundColor: #111;
+$toastMessageBackgroundColor: #333;
 
 // Mixins
 
@@ -274,7 +276,7 @@ $buttonShadow: hsl(0, 0%, 33%);
 .toast {
     visibility: hidden;
 	border-radius: $borderRadius;
-    max-width: 6rem;
+    max-width: 2.2rem;
     height: 3.5rem;
     margin: auto;
     text-align: center;
@@ -293,21 +295,21 @@ $buttonShadow: hsl(0, 0%, 33%);
 }
 .toast-title {
 	padding: 1rem;
-    background-color: #111;
+    background-color: $toastTitleBackgroundColor;
 	border-top-left-radius: $borderRadius;
 	border-bottom-left-radius: $borderRadius;
 
 }
 .toast-message {
-    background-color: #333;
+    background-color: $toastMessageBackgroundColor;
     padding: 1rem;
 	border-top-right-radius: $borderRadius;
 	border-bottom-right-radius: $borderRadius;
 }
 .show {
     visibility: visible;
-    -webkit-animation: fadein 0.5s, expand 0.5s 0.5s, textcolor 0.5s 0.5s, stay 3s 1s, shrink 0.5s 2s, fadeout 0.5s 2.5s;
-    animation: fadein 0.5s, expand 0.5s 0.5s, textcolor 0.5s 0.5s, stay 3s 1s, shrink 0.5s 4s, fadeout 0.5s 4.5s;
+    -webkit-animation: fadein 0.5s, expand 0.5s 0.5s, textcolor 0.5s 0.5s, stay 3s 1s, shrink 0.5s 4s, fadeout 0.75s 4.25s;
+    animation: fadein 0.5s, expand 0.5s 0.5s, textcolor 0.5s 0.5s, stay 3s 1s, shrink 0.5s 4s, fadeout 0.75s 4.25s;
 }
 
 @-webkit-keyframes fadein {
@@ -321,12 +323,12 @@ $buttonShadow: hsl(0, 0%, 33%);
 }
 
 @-webkit-keyframes expand {
-    from {min-width: 5rem; height: 3.5rem;} 
+    from {min-width: 2.2rem; height: 3.5rem;} 
     to {min-width: fit-content; height: auto; }
 }
 
 @keyframes expand {
-    from {min-width: 5rem; height: 3.5rem;}
+    from {min-width: 2.2rem; height: 3.5rem;}
     to {@include min-width-fit-content; height: auto;}
 }
 
@@ -352,20 +354,20 @@ $buttonShadow: hsl(0, 0%, 33%);
 
 @-webkit-keyframes shrink {
     from {min-width: fit-content;} 
-    to {min-width: 5rem;}
+    to {min-width: 2.2rem;}
 }
 
 @keyframes shrink {
     from {@include min-width-fit-content;} 
-    to {min-width: 5rem;}
+    to {min-width: 2.2rem;}
 }
 
 @-webkit-keyframes fadeout {
     from {bottom: 2rem; opacity: 1;} 
-    to {bottom: 3.5rem; opacity: 0;}
+    to {bottom: 5.5rem; opacity: 0;}
 }
 
 @keyframes fadeout {
     from {bottom: 2rem; opacity: 1;}
-    to {bottom: 3.5rem; opacity: 0;}
+    to {bottom: 5.5rem; opacity: 0;}
 }

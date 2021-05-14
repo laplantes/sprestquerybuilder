@@ -90,24 +90,26 @@
 
 .container-url-test {
 	display: flex;
-	justify-content: space-around;
-
-	& > * {
-		margin: 0 0.5rem;
-	}
+	justify-content: space-between;
 
 	& :first-child {
 		flex-grow: 1;
+		margin-right: 1rem;
 	}
-}
-
-.cushion {
-	flex-grow: 1;
 }
 
 .query-string {
 	width: 100%;
 	border: transparent;
+}
+
+.container-test-query {
+	flex-direction: column;
+	padding: 0 1rem 1rem 1rem;
+}
+
+.cushion {
+	flex-grow: 1;
 }
 
 // Media queries

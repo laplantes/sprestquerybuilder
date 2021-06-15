@@ -4,8 +4,8 @@ let selects = {},
 	selectCount = 0,
 	filters = {},
 	filterCount = 0,
-	orderBy = ``,
-	topNumber;
+	orderBy = {},
+	topNumber=0;
 
 /**
  * function for clearing the lists contents before displaying new contents
@@ -38,21 +38,38 @@ const buildItemHtml = (type, itemData) => {
 			
 		case 'filter':
 			return `
-			<div  id="${type}-${itemData.id}" class="box-item">
-			<div><b>${type}:</b> ${itemData.name} <b>{${itemData.operator}}</b> ${itemData.value}</div>
-			<span id="close-filter-${itemData.id}">X</span>
-			</div>				
+				<div  id="${type}-${itemData.id}" class="box-item">
+					<div><b>${type}:</b> ${itemData.name} <b>{${itemData.operator}}</b> ${itemData.value} <b>{${itemData.option}}</b></div>
+					<span id="close-filter-${itemData.id}">X</span>
+				</div>				
 			`;
-			
+
+		case 'orderby':
+			return `
+				<div  id="${type}" class="box-item">
+					<div><b>${type}:</b> ${itemData.columnName} <b>{${itemData.operator}}</b></div>
+					<span id="close-orderby">X</span>
+				</div>
+			`;
+
+		case 'top':
+			return `
+				<div  id="${type}" class="box-item">
+					<div><b>${type}:</b> ${itemData}</div>
+					<span id="close-top">X</span>
+				</div>
+			`;
+
 		default:
 			console.log("error");
 			break;
 	}
 };
 
-//  TODO: make and or available as a choice for multiple filters
-const buildQueryString = (querystringSelects=``, querystringFilters=``) => {
-	let fullQueryString = `?`;
+//  TODO: make and / or available as a choice for multiple filters
+const buildQueryString = (querystringSelects=``, querystringFilters=``, orderby={columnName: ``, operator: ``}, top=0) => {
+	let fullQueryString = `?`,
+		queryCount = 0;
 
 
 	if (Object.keys(querystringSelects).length > 0) {
@@ -64,25 +81,43 @@ const buildQueryString = (querystringSelects=``, querystringFilters=``) => {
 		const selectsString= selectsArray.join(',');
 		fullQueryString += `$select=`;
 		fullQueryString += `${selectsString}`;
+		queryCount++;
 	}
 
 	if (Object.keys(querystringFilters).length > 0) {
 		let filtersArray = [];
 		// Populate the contents of the filterArray
 		for (const item of Object.entries(querystringFilters)) {
-			filtersArray.push(`${item[1].name} ${item[1].operator} ${item[1].value}`)
+			filtersArray.push(`${item[1].name} ${item[1].operator} ${item[1].value}`);
 		}
 		let filtersString = ``; 
 		if (filtersArray.length === 1) {
 			filtersString = `${filtersArray[0]}`;
 		} else {
 			for (let i=0; i < filtersArray.length; i++) {
-				(i+1 === filtersArray.length) ? filtersString += `(${filtersArray[i]})`	: filtersString += `(${filtersArray[i]}) and `;
+				(i+1 === filtersArray.length) ? filtersString += `(${filtersArray[i]})`	: filtersString += `(${filtersArray[i]}) ${querystringFilters[i].option} `;
 			}
 		}
+		console.log('The query string selects are', querystringSelects.length);
+		(queryCount > 0) ? fullQueryString += `&` : false;
 		fullQueryString += `$filter=`;
 		fullQueryString += `(${filtersString})`;
+		queryCount++;
 	}
+
+	if (orderby.columnName) {
+		(queryCount > 0) ? fullQueryString += `&` : false;
+		fullQueryString += `$orderby=${orderby.columnName} ${orderby.operator}`;
+		queryCount++;
+		
+	}
+
+	if (top > 0) {
+		(queryCount > 0) ? fullQueryString += `&` : false;
+		fullQueryString += `$top=${top}`;
+		queryCount++;
+	}
+	
 
 	return fullQueryString;
 };
@@ -127,21 +162,22 @@ document.getElementById('add-filter-item').addEventListener('click', () => {
 	// get the filter values
 	const filterName = document.getElementById('filter-column-name').value,
 		filterOperator = document.getElementById('filter-operator').value,
-		filterValue = document.getElementById('filter-value').value;
+		filterValue = document.getElementById('filter-value').value,
+		filterAddOr = document.getElementById('filter-item-and-or').value;
 		if (filterName && filterOperator && filterValue) {
 			// build the new object using the global filterCount and the functionally scoped filter values
-			const newFilter = {id: filterCount, name: filterName, operator: filterOperator, value: filterValue};
+			const newFilter = {id: filterCount, name: filterName, operator: filterOperator, value: `'${filterValue}'`, option: filterAddOr};
 			// Call the function to build out the required HTML to add to the filter to the page
 			const newFilterHtml = buildItemHtml(`filter`, newFilter);
 			// Insert the newly created HTML
 			document.getElementById('query-box-preview').insertAdjacentHTML('beforeend', newFilterHtml);
-			// add the new filter into the filterss object
+			// add the new filter into the filters object
 			filters[`${filterCount}`] = newFilter;
 			// Get the newly created HTML element
 			const newFilterItem = document.getElementById(`filter-${filterCount}`);
 			// Add an event listener to the newly created items remove button for removing the item from the page and from the selects object
 			document.getElementById(`close-filter-${filterCount}`).addEventListener('click', () => { newFilterItem.remove(); delete filters[`${newFilter.id}`]; });
-			// clear the inputs in the form in preperation for the next item to be added
+			// clear the inputs in the form in preparation for the next item to be added
 			document.getElementById('filter-column-name').value = "";
 			document.getElementById('filter-operator').value = "";
 			document.getElementById('filter-value').value = "";
@@ -158,21 +194,34 @@ document.getElementById('add-date-filter-item').addEventListener('click', () => 
 	console.log('Add filter date item clicked');
 });
 
-// Click event for orderby button
+// Click event for orderby button TODO: add comments
 document.getElementById('add-orderby-item').addEventListener('click', () => {
-	console.log('Add oderby item clicked');
+	console.log('Add orderby item clicked');
+	if (orderBy.columnName) {
+		orderBy.columnName = document.getElementById('orderby-column-name').value;
+		orderBy.operator = document.getElementById('orderby-operator').value;
+		const newOrderbyHtml = buildItemHtml(`orderby`, {columnName: orderBy.columnName, operator: orderBy.operator});
+		document.getElementById('query-box-preview').insertAdjacentHTML('beforeend', newOrderbyHtml);
+		const newOrderbyItem = document.getElementById('orderby');
+		document.getElementById(`close-orderby`).addEventListener('click', () => { newOrderbyItem.remove(); orderBy = {}; });
+		document.getElementById('orderby-column-name').value = ``;
+		document.getElementById('orderby-operator').value = ``;
+	} else {
+		showToast(`Attention`, `Please ensure all fields contain entries to add orderby to the query`);
+	}
 });
 
 // Click event for add top button
 document.getElementById('add-top-item').addEventListener('click', () => {
 	console.log('Add top item clicked');
+	topNumber=document.getElementById('top-number').value;
 });
 
 // Click event for generate query button
 document.getElementById('generate-query').addEventListener('click', () => {
 	console.log('Generate Query clicked');
 	const queryContainer = document.getElementById('query'),
-		queryHtml = buildQueryString(selects, filters);
+		queryHtml = buildQueryString(selects, filters, orderBy, topNumber);
 	(queryContainer.innerText.length > 0) ? queryContainer.innerText = '' : false;
 	queryContainer.insertAdjacentHTML('afterbegin', queryHtml);
 });

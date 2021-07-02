@@ -71,14 +71,28 @@
 	justify-content: space-between;
 }
 
+.container-query-current-header {
+	display: flex;
+	justify-content: space-between;
+
+	& > .btn {
+		margin-bottom: 0.5rem;
+	}
+}
+
 .query-box {
 	display: flex;
 	flex-wrap: wrap;
 	min-height: 3rem;
 	max-height: 12rem;
-	max-height: 12rem;
+	max-height: 20rem;
 	padding: 0.5rem;
 	overflow-y: auto;
+
+	& div {
+		display: inherit;
+		flex-wrap: inherit;
+	}
 }
 
 .container-chevron {

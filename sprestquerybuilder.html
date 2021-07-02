@@ -22,7 +22,6 @@
 				Messages will appear here
 			</div>
 		</article>
-		<!-- <div class="cushion"></div> -->
 		<div class="container-app-main">
 			<div>
 
@@ -43,9 +42,10 @@
 					<div class="container-query-type box-raised">
 						<div class="container-query-inputs">
 							<input id="orderby-column-name" class="input" type="text" placeholder="Enter column name">
-							<select id="orderby-operator" class="dropdown" name="filter-operator">
-								<option selected value="asc">Accending</option>
-								<option value="des">Descending</option>
+							<select id="orderby-operator" class="dropdown" name="orderby-operator">
+								<option disabled selected value> -- select an option -- </option>
+								<option value="asc">Ascending</option>
+								<option value="desc">Descending</option>
 							</select>
 						</div>
 						<div class="container-query-button">
@@ -59,7 +59,7 @@
 					<div class="container-query-type box-raised">
 						<div class="container-query-inputs">
 							<div class="inputLabel">Number of results</div>
-							<input id="top-number" class="input" type="number" min="1" placeholder="100">
+							<input id="top-number" class="input" type="number" min="1" value="100" placeholder="100">
 						</div>
 						<div class="container-query-button">
 							<button id="add-top-item" class="btn">Add to query</button>
@@ -87,15 +87,7 @@
 								<option value="or">Or</option>
 							</select>
 						</div>
-						<div class="container-query-button">
-							<button id="add-filter-item" class="btn">Add to query</button>
-						</div>
-					</div>
-				</div>
 
-				<div>
-					<h3 class="title-query">Add a date filter</h3>
-					<div class="container-query-type box-raised">
 						<div class="container-query-inputs">
 							<input id="filter-date-column-name" class="input" type="text" placeholder="Enter column name">
 							<select id="filter-date-operator" class="dropdown" name="filter-operator">
@@ -124,8 +116,16 @@
 			
 			<div class="container-results-query">
 				<div class="container-query-current">
-					<h3 class="title-query">Current query items</h3>
-					<div id="query-box-preview" class="query-box box-inset"></div>
+					<div class="container-query-current-header">
+						<h3 class="title-query">Current query items</h3>
+						<button id="query-clear" class="btn">Clear Query</button>
+					</div>
+					<div id="query-box-preview" class="query-box box-inset">
+						<div id="container-selects"></div>
+						<div id="container-filters"></div>
+						<div id="container-orderby"></div>
+						<div id="container-top"></div>
+					</div>
 				</div>
 				<div class="cushion"></div>
 				<div class="cushion"></div>
@@ -158,7 +158,6 @@
 			</div>
 
 		</div>
-		<button onclick="showToast()" style="width: 6rem; display: none;">Show Toast</button>
 		<footer class="footer"></footer>
 	</div>
 	<div id="toast" class="toast">

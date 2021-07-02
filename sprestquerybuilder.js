@@ -5,7 +5,7 @@ let selects = {},
 	filters = {},
 	filterCount = 0,
 	orderBy = {},
-	topNumber=0;
+	topNumber=null;
 
 /**
  * function for clearing the lists contents before displaying new contents
@@ -128,11 +128,13 @@ const buildQueryString = (querystringSelects=``, querystringFilters=``, orderby=
 //  TODO: add this to the docs for the info bar
 // document.getElementById('close-notice').addEventListener('click', clearInfoBar);
 
+
+
 // Click event for select button
 document.getElementById('add-select-item').addEventListener('click', () => {
 
-	// get the select input value
-	const selectValue = document.getElementById('select-column-name').value;
+	// get the select input value and convert any spaces to use the SharePoint format for spaces
+	const selectValue = document.getElementById('select-column-name').value.replace(/ /g, '_x0020_');
 	// Ensure there is content to add
 	if (selectValue) {
 		// Build the new object using the global selectCount and the functionally scoped selectValue
@@ -140,7 +142,7 @@ document.getElementById('add-select-item').addEventListener('click', () => {
 		// Call the function to build out the required HTML to add the select to the page
 		const newSelectHtml = buildItemHtml(`select`, newSelect);
 		// Insert the newly created HTML
-		document.getElementById('query-box-preview').insertAdjacentHTML('beforeend', newSelectHtml);
+		document.getElementById('container-selects').insertAdjacentHTML('beforeend', newSelectHtml);
 		// add the new select into the selects object
 		selects[`${selectCount}`] = newSelect;
 		// Get the newly created HTML element
@@ -157,37 +159,36 @@ document.getElementById('add-select-item').addEventListener('click', () => {
 });
 
 // Click event for filter button
-document.getElementById('add-filter-item').addEventListener('click', () => {
-	console.log('Add filter item clicked');
-	// get the filter values
-	const filterName = document.getElementById('filter-column-name').value,
-		filterOperator = document.getElementById('filter-operator').value,
-		filterValue = document.getElementById('filter-value').value,
-		filterAddOr = document.getElementById('filter-item-and-or').value;
-		if (filterName && filterOperator && filterValue) {
-			// build the new object using the global filterCount and the functionally scoped filter values
-			const newFilter = {id: filterCount, name: filterName, operator: filterOperator, value: `'${filterValue}'`, option: filterAddOr};
-			// Call the function to build out the required HTML to add to the filter to the page
-			const newFilterHtml = buildItemHtml(`filter`, newFilter);
-			// Insert the newly created HTML
-			document.getElementById('query-box-preview').insertAdjacentHTML('beforeend', newFilterHtml);
-			// add the new filter into the filters object
-			filters[`${filterCount}`] = newFilter;
-			// Get the newly created HTML element
-			const newFilterItem = document.getElementById(`filter-${filterCount}`);
-			// Add an event listener to the newly created items remove button for removing the item from the page and from the selects object
-			document.getElementById(`close-filter-${filterCount}`).addEventListener('click', () => { newFilterItem.remove(); delete filters[`${newFilter.id}`]; });
-			// clear the inputs in the form in preparation for the next item to be added
-			document.getElementById('filter-column-name').value = "";
-			document.getElementById('filter-operator').value = "";
-			document.getElementById('filter-value').value = "";
-			// Increment the select counter		
-			filterCount++;
-		} else {
-		showToast(`Attention`, `Please ensure all fields contain entries to add to the filter query`);
-		}
-
-});
+// document.getElementById('add-filter-item').addEventListener('click', () => {
+// 	console.log('Add filter item clicked');
+// 	// get the filter values
+// 	const filterName = document.getElementById('filter-column-name').value.replace(/ /g, '_x0020_'),
+// 		filterOperator = document.getElementById('filter-operator').value,
+// 		filterValue = document.getElementById('filter-value').value,
+// 		filterAddOr = document.getElementById('filter-item-and-or').value;
+// 		if (filterName && filterOperator && filterValue) {
+// 			// build the new object using the global filterCount and the functionally scoped filter values
+// 			const newFilter = {id: filterCount, name: filterName, operator: filterOperator, value: `'${filterValue}'`, option: filterAddOr};
+// 			// Call the function to build out the required HTML to add to the filter to the page
+// 			const newFilterHtml = buildItemHtml(`filter`, newFilter);
+// 			// Insert the newly created HTML
+// 			document.getElementById('query-box-preview').insertAdjacentHTML('beforeend', newFilterHtml);
+// 			// add the new filter into the filters object
+// 			filters[`${filterCount}`] = newFilter;
+// 			// Get the newly created HTML element
+// 			const newFilterItem = document.getElementById(`filter-${filterCount}`);
+// 			// Add an event listener to the newly created items remove button for removing the item from the page and from the selects object
+// 			document.getElementById(`close-filter-${filterCount}`).addEventListener('click', () => { newFilterItem.remove(); delete filters[`${newFilter.id}`]; });
+// 			// clear the inputs in the form in preparation for the next item to be added
+// 			document.getElementById('filter-column-name').value = "";
+// 			document.getElementById('filter-operator').value = "";
+// 			document.getElementById('filter-value').value = "";
+// 			// Increment the select counter		
+// 			filterCount++;
+// 		} else {
+// 		showToast(`Attention`, `Please ensure all fields contain entries to add to the filter query`);
+// 		}
+// });
 
 // Click event for filter date button
 document.getElementById('add-date-filter-item').addEventListener('click', () => {
@@ -196,34 +197,52 @@ document.getElementById('add-date-filter-item').addEventListener('click', () => 
 
 // Click event for orderby button TODO: add comments
 document.getElementById('add-orderby-item').addEventListener('click', () => {
-	console.log('Add orderby item clicked');
-	if (orderBy.columnName) {
-		orderBy.columnName = document.getElementById('orderby-column-name').value;
-		orderBy.operator = document.getElementById('orderby-operator').value;
-		const newOrderbyHtml = buildItemHtml(`orderby`, {columnName: orderBy.columnName, operator: orderBy.operator});
-		document.getElementById('query-box-preview').insertAdjacentHTML('beforeend', newOrderbyHtml);
-		const newOrderbyItem = document.getElementById('orderby');
-		document.getElementById(`close-orderby`).addEventListener('click', () => { newOrderbyItem.remove(); orderBy = {}; });
-		document.getElementById('orderby-column-name').value = ``;
-		document.getElementById('orderby-operator').value = ``;
+	const orderByValue = document.getElementById('orderby-column-name').value.replace(/ /g, '_x0020_'),
+		orderByOperator = document.getElementById('orderby-operator').value;
+	if (orderBy.columnName ? true : false) {
+		showToast(`Attention`, `OrderBy has already been assigned. Remove existing entry before reassigning.`);
 	} else {
-		showToast(`Attention`, `Please ensure all fields contain entries to add orderby to the query`);
+		if (orderByValue && orderByOperator) {
+			console.log(`The value of orderBy is: ${orderByValue}`);
+			orderBy.columnName = orderByValue;
+			orderBy.operator = orderByOperator;
+			const newOrderbyHtml = buildItemHtml(`orderby`, orderBy);
+			document.getElementById('container-orderby').insertAdjacentHTML('beforeend', newOrderbyHtml);
+			const newOrderbyItem = document.getElementById('orderby');
+			document.getElementById(`close-orderby`).addEventListener('click', () => { newOrderbyItem.remove(); orderBy = {}; });
+			document.getElementById('orderby-column-name').value = ``;
+			document.getElementById('orderby-operator').value = ``;
+		} else {
+			showToast(`Attention`, `Please ensure all fields contain entries to add orderby to the query`);
+		}
 	}
 });
 
 // Click event for add top button
 document.getElementById('add-top-item').addEventListener('click', () => {
 	console.log('Add top item clicked');
-	topNumber=document.getElementById('top-number').value;
+	const topValue = document.getElementById('top-number').value;
+	if (topNumber === null && topValue > 0) {
+		topNumber = topValue;
+		const topHtml = buildItemHtml(`top`, topNumber);
+		document.getElementById('container-top').insertAdjacentHTML('afterbegin', topHtml);
+		const newTopItem = document.getElementById('top');
+		document.getElementById(`close-top`).addEventListener('click', () => { newTopItem.remove(); topNumber = null; });
+		document.getElementById('top-number').value = 100;
+	} else if (topNumber < 1) {
+		showToast(`Attention`, `Value cannot be less than 1`);
+	} else {
+		showToast(`Attention`, `A top value has already been assigned. Remove the current top before adding a new value.`);
+	}
 });
 
 // Click event for generate query button
 document.getElementById('generate-query').addEventListener('click', () => {
 	console.log('Generate Query clicked');
 	const queryContainer = document.getElementById('query'),
-		queryHtml = buildQueryString(selects, filters, orderBy, topNumber);
-	(queryContainer.innerText.length > 0) ? queryContainer.innerText = '' : false;
-	queryContainer.insertAdjacentHTML('afterbegin', queryHtml);
+		queryCompleteString = buildQueryString(selects, filters, orderBy, topNumber);
+	(queryContainer.innerText !== '') ? queryContainer.innerText = '' : false;
+	queryContainer.innerText = queryCompleteString;
 });
 
 // Click event for test url button
@@ -231,10 +250,16 @@ document.getElementById('test-url').addEventListener('click', () => {
 	console.log('Test URL clicked');
 });
 
+//  click event for copy to clipboard
 document.getElementById('copy-query').addEventListener('click', () => {
-	const areaToCopy = document.getElementById('query-string');
-	areaToCopy.select();
-	areaToCopy.setSelectionRange(0, 99999);
-	document.execCommand("copy");
-	console.log('The copied text value is: ', areaToCopy.value);
+	const areaToCopy = async () => {return document.getElementById('query').innerText;};
+	areaToCopy().then(async (copied) => {
+		try {
+			await navigator.clipboard.writeText(copied);
+			showToast(`Success`, `Query copied to the clipboard`);
+		}
+		catch (error) {
+			showToast(`Oh no`, `Query failed to copy to the clipboard`);
+		}
+	})
 });

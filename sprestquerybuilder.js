@@ -7,16 +7,25 @@ let selects = {},
 	orderBy = {},
 	topNumber = null;
 
+const clearValues = () => {
+	selects = {},
+	selectCount = 0,
+	filters = {},
+	filterCount = 0,
+	orderBy = {},
+	topNumber = null;
+};
+
 /**
  * Function for clearing the lists contents before displaying new contents
- * @param  {object} listToClear [the variable that represents the container to clean out]
+ * @param  {object} containerToClear [the variable that represents the container to clean out]
  * @return {none}             [none]
  */
-// const clearList = (listToClear) => {
-// 	while (listToClear.firstChild) {
-// 		listToClear.removeChild(listToClear.firstChild);
-// 	}
-// };
+const clearContainer = (containerToClear) => {
+	while (containerToClear.firstChild) {
+		containerToClear.removeChild(containerToClear.firstChild);
+	}
+};
 
 /**
  * Function for displaying a toast message
@@ -140,6 +149,11 @@ const buildQueryString = (querystringSelects=``, querystringFilters=``, orderby=
 // document.getElementById('close-notice').addEventListener('click', clearInfoBar);
 
 
+const clearQueryContainers = (containers) => {
+	containers.forEach(container => {
+		clearContainer(container);
+	});
+}
 
 // Click event for select button
 document.getElementById('add-select-item').addEventListener('click', () => {
@@ -236,15 +250,16 @@ const testUrl = (queryString) => {
 	}
 };
 
-// Click event for test url button
-document.getElementById('test-url-button').addEventListener('click', () => {
-	console.log('Test URL clicked');
-	const generatedQueryString = document.getElementById('query').innerText;
-	if (generatedQueryString.length > 0) {
-		testUrl(generatedQueryString);
-	} else {
-		showToast('Attention', 'Generate a query before attempting to test it');
-	}
+// insert text into the specified location, or currently active location
+const insertText = (text, insertLocation = document.activeElement) => {
+	insertLocation.setRangeText(text, insertLocation.selectionStart, insertLocation.selectionEnd, 'select');
+};
+
+// click event for clear query button
+document.getElementById('query-clear').addEventListener('click', () => {
+	let containersToClear = Array.from(document.getElementById('query-box-preview').children);
+	clearQueryContainers(containersToClear);
+	document.getElementById('query').innerText = '';
 });
 
 //  click event for copy to clipboard
@@ -259,6 +274,19 @@ document.getElementById('copy-query').addEventListener('click', () => {
 			showToast(`Oh no`, `Query failed to copy to the clipboard`);
 		}
 	});
+
+// Click event for test url button
+document.getElementById('test-url-button').addEventListener('click', () => {
+	console.log('Test URL clicked');
+	const generatedQueryString = document.getElementById('query').innerText;
+	if (generatedQueryString.length > 0) {
+		testUrl(generatedQueryString);
+	} else {
+		showToast('Attention', 'Generate a query before attempting to test it');
+	}
+});
+
+
 
 
 	// Click event for filter button

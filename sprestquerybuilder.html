@@ -70,45 +70,46 @@
 				<div>
 					<h3 class="title-query">Add a filter item</h3>
 					<div class="container-query-type container-query-type-filter box-raised">
-						<div class="container-query-inputs">
-							<input id="filter-column-name" class="input" type="text" placeholder="Enter column name">
-							<select id="filter-operator" class="dropdown" name="filter-operator">
-								<option disabled selected value> -- select an option -- </option>
-								<option value="eq">Equal</option>
-								<option value="ne">Not equal</option>
-								<option value="gt">Greater than</option>
-								<option value="ge">Greater than or equal</option>
-								<option value="lt">Less than</option>
-								<option value="le">Less than or equal</option>
-							</select>
-							<input id="filter-value" class="input" type="text" placeholder="Enter value">
-							<select id="filter-item-and-or" class="dropdown" name="filter-item-and-or">
-								<option selected value="and">And</option>
-								<option value="or">Or</option>
-							</select>
-						</div>
+						<div class="container-query-inputs container-filter-controls">
+							<div class="container-filter-inputs">
+								<div class="container-filter-actions">
+									<button id="button-open" class="btn">Open Section (</button>
+									<button id="button-and" class="btn">And</button>
+									<button id="button-or" class="btn">Or</button>
+									<button id="button-close" class="btn">Close Section )</button>
+								</div>
+								<div class="container-filter-actions">
+									<input id="filter-column-name" class="input" type="text" placeholder="Enter column name">
+									<select id="filter-operator" class="dropdown" name="filter-operator">
+										<option disabled selected value> -- select an option -- </option>
+										<option value="eq">Equal</option>
+										<option value="ne">Not equal</option>
+										<option value="gt">Greater than</option>
+										<option value="ge">Greater than or equal</option>
+										<option value="lt">Less than</option>
+										<option value="le">Less than or equal</option>
+									</select>
+								</div>
+								<div class="container-filter-actions">
+									<input id="filter-value" class="input" type="text" placeholder="Enter value">
+									<B>OR</B>
+									<input id="filter-date-value" class="input" type="date" name="date" id="date">
+									<input id="filter-time-value" class="input" type="time" name="time" id="time">
+								</div>
+							</div>
+							<div class="container-filter-buttons">
+								<div class="container-query-button">
+									<button id="filter-clear-all" class="btn">Clear All</button>
+								</div>
+								<div class="container-query-button">
+									<button id="add-filter-query-item" class="btn">Add to filter</button>
+								</div>
+							</div>
 
-						<div class="container-query-inputs">
-							<input id="filter-date-column-name" class="input" type="text" placeholder="Enter column name">
-							<select id="filter-date-operator" class="dropdown" name="filter-operator">
-								<option disabled selected value> -- select an option -- </option>
-								<option value="eq">Equal</option>
-								<option value="ne">Not equal</option>
-								<option value="gt">Greater than</option>
-								<option value="ge">Greater than or equal</option>
-								<option value="lt">Less than</option>
-								<option value="le">Greater than or equal</option>
-							</select>
-							<input id="filter-date-value" class="input" type="date" name="date" id="date">
-							<input id="filter-time-value" class="input" type="time" name="time" id="time">
-							<select id="filter-date-and-or" class="dropdown" name="filter-date-and-or">
-								<option selected value="and">And</option>
-								<option value="or">Or</option>
-							</select>
 						</div>
-						<textarea name="filter-string" id="filter-string" class="filter-string box-inset" cols="30" rows="10"></textarea>
+						<textarea name="filter-string" id="filter-string" class="filter-string box-inset"></textarea>
 						<div class="container-query-button">
-							<button id="add-date-filter-item" class="btn">Add to query</button>
+							<button id="add-filter-item" class="btn">Add to query</button>
 						</div>
 					</div>
 				</div>

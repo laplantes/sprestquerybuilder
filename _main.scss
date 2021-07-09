@@ -43,6 +43,16 @@
 
 .container-query-type {
 
+	&.container-query-type-filter {
+		flex-direction: column;
+		
+		& .filter-string {
+			max-height: 4rem;
+			max-width: 95%;
+			margin: 0 1rem;
+		}
+	}
+
 	& > * {
 		padding: 1.25rem;
 	}
@@ -53,6 +63,60 @@
 	justify-content: center;
 	flex-wrap: wrap;
 	gap: 1rem;
+}
+
+.container-filter-controls {
+	flex-wrap: nowrap;
+	justify-content: space-between;
+	
+	& .container-filter-inputs {
+		flex-grow: 2;
+		margin-top: -1rem;
+	}
+
+	& .container-filter-actions {
+		display: flex;
+		flex-wrap: wrap;
+    	justify-content: space-between;
+
+		@media all and(max-width: 1299px) {
+		flex-direction: column;	
+		}
+
+		&:last-child {
+			@media all and(max-width: 1599px) {
+				flex-direction: column;
+			}
+		}
+
+		& b {
+			font-size: 2rem;
+			margin-left: auto;
+		    margin-right: auto;
+		}
+	}
+
+	& .container-filter-buttons {
+		display: flex;
+    	flex-direction: column;
+    	flex-grow: 1;
+		justify-content: space-between;
+
+		& .container-query-button {
+			flex-grow: 0;
+		}
+	}
+}
+
+.container-filter-inputs {
+	flex-grow: 2;
+	margin-top: -1rem;
+
+	& > div {
+		& > * {
+			margin: 1rem 0.5rem 0 0.5rem;
+		}
+	}
 }
 
 .container-query-button {

@@ -47,9 +47,12 @@
 		flex-direction: column;
 		
 		& .filter-string {
-			max-height: 4rem;
-			max-width: 95%;
 			margin: 0 1rem;
+			padding-top: 0.5rem;
+			height: 5rem;
+			min-height: 2rem;
+			max-height: 8rem;
+			resize: vertical;
 		}
 	}
 

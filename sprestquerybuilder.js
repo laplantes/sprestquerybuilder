@@ -4,18 +4,22 @@ const filterStringContainer = document.getElementById('filter-string');
 
 let selects = {},
 	selectCount = 0,
-	filters = {},
-	filterCount = 0,
 	orderBy = {},
-	topNumber = null;
+	topNumber = null,
+	expands = {},
+	expandCount = 0,
+	filters = {},
+	filterCount = 0;
 
 const clearValues = () => {
 	selects = {},
 	selectCount = 0,
-	filters = {},
-	filterCount = 0,
 	orderBy = {},
-	topNumber = null;
+	topNumber = null,
+	expands = {},
+	expandCount = 0,
+	filters = {},
+	filterCount = 0;
 };
 
 /**
@@ -283,7 +287,18 @@ document.getElementById('add-filter-query-item').addEventListener('click', () =>
 		value = document.getElementById('filter-value').value,
 		date = document.getElementById('filter-date-value').value,
 		time = document.getElementById('filter-time-value').value;
-		console.log(`Go values of: ${columnName}, ${operator}, ${value}, ${date}, ${time}`);
+		if (value && (date || time)) {
+			showToast('Attention', 'Choose either a value -OR- a date and time')
+		} else if (columnName && operator && ( value && !(time || date) ) ) {
+			// validation passes for all required fields and the value field
+			insertText(`${columnName} ${operator} ${value}`, filterStringContainer);
+		} else if (columnName && operator && ( !value && (time && date) ) ) {
+			// validation passes for all required fields and the value field
+			insertText(`${columnName} ${operator} '${date}T${time}:00Z'`, filterStringContainer);
+		} else {
+			// Oh no, something isn't correct with the inputs
+			showToast('Attention', 'Ensure filter inputs has data entered correctly');
+		}
 });
 
 //  Click event for filter clear all button

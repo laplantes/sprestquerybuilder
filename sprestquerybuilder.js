@@ -8,7 +8,7 @@ let selects = {},
 	topNumber = null,
 	expands = {},
 	expandCount = 0,
-	filters = {},
+	filter = '',
 	filterCount = 0;
 
 const clearValues = () => {
@@ -18,7 +18,7 @@ const clearValues = () => {
 	topNumber = null,
 	expands = {},
 	expandCount = 0,
-	filters = {},
+	filter = '',
 	filterCount = 0;
 };
 
@@ -64,9 +64,9 @@ const buildItemHtml = (type, itemData) => {
 			
 		case 'filter':
 			return `
-				<div  id="${type}-${itemData.id}" class="box-item">
-					<div><b>${type}:</b> ${itemData.name} <b>{${itemData.operator}}</b> ${itemData.value} <b>{${itemData.option}}</b></div>
-					<span id="close-filter-${itemData.id}">X</span>
+				<div  id="${type}" class="box-item">
+					<div><b>${type}:</b> ${itemData.filter} </div>
+					<span id="close-filter">X</span>
 				</div>				
 			`;
 
@@ -110,32 +110,17 @@ const buildQueryString = (querystringSelects=``, querystringFilters=``, orderby=
 		queryCount++;
 	}
 
-	if (Object.keys(querystringFilters).length > 0) {
-		let filtersArray = [];
-		// Populate the contents of the filterArray
-		for (const item of Object.entries(querystringFilters)) {
-			filtersArray.push(`${item[1].name} ${item[1].operator} ${item[1].value}`);
-		}
-		let filtersString = ``; 
-		if (filtersArray.length === 1) {
-			filtersString = `${filtersArray[0]}`;
-		} else {
-			for (let i=0; i < filtersArray.length; i++) {
-				(i+1 === filtersArray.length) ? filtersString += `(${filtersArray[i]})`	: filtersString += `(${filtersArray[i]}) ${querystringFilters[i].option} `;
-			}
-		}
-		console.log('The query string selects are', querystringSelects.length);
-		(queryCount > 0) ? fullQueryString += `&` : false;
-		fullQueryString += `$filter=`;
-		fullQueryString += `(${filtersString})`;
-		queryCount++;
-	}
-
 	if (orderby.columnName) {
 		(queryCount > 0) ? fullQueryString += `&` : false;
 		fullQueryString += `$orderby=${orderby.columnName} ${orderby.operator}`;
 		queryCount++;
 		
+	}
+
+	if (filter.length > 0) {
+		(queryCount > 0) ? fullQueryString += `&` : false;
+		fullQueryString += `$filter=${filter}`;
+		queryCount++;
 	}
 
 	if (top > 0) {
@@ -235,7 +220,7 @@ document.getElementById('add-top-item').addEventListener('click', () => {
 	} else if (topNumber < 1) {
 		showToast(`Attention`, `Value cannot be less than 1`);
 	} else {
-		showToast(`Attention`, `A top value has already been assigned. Remove the current top before adding a new value.`);
+		showToast(`Attention`, `A Row Limit value has already been assigned. Remove the current Row Limit before adding a new value.`);
 	}
 });
 
@@ -243,7 +228,7 @@ document.getElementById('add-top-item').addEventListener('click', () => {
 document.getElementById('generate-query').addEventListener('click', () => {
 	console.log('Generate Query clicked');
 	const queryContainer = document.getElementById('query'),
-	queryCompleteString = buildQueryString(selects, filters, orderBy, topNumber);
+	queryCompleteString = buildQueryString(selects, filter, orderBy, topNumber);
 	(queryContainer.innerText !== '') ? queryContainer.innerText = '' : false;
 	queryContainer.innerText = queryCompleteString;
 });
@@ -282,7 +267,7 @@ document.getElementById('button-filter-close').addEventListener('click', () => {
 
 // Click event for add to filter button
 document.getElementById('add-filter-query-item').addEventListener('click', () => {
-	const columnName = document.getElementById('filter-column-name').value,
+	let columnName = document.getElementById('filter-column-name').value,
 		operator = document.getElementById('filter-operator').value,
 		value = document.getElementById('filter-value').value,
 		date = document.getElementById('filter-date-value').value,
@@ -292,13 +277,40 @@ document.getElementById('add-filter-query-item').addEventListener('click', () =>
 		} else if (columnName && operator && ( value && !(time || date) ) ) {
 			// validation passes for all required fields and the value field
 			insertText(`${columnName} ${operator} ${value}`, filterStringContainer);
+			document.getElementById('filter-column-name').value = '';
+			document.getElementById('filter-operator').value = '';
+			document.getElementById('filter-value').value = ';'
 		} else if (columnName && operator && ( !value && (time && date) ) ) {
 			// validation passes for all required fields and the value field
 			insertText(`${columnName} ${operator} '${date}T${time}:00Z'`, filterStringContainer);
+			document.getElementById('filter-column-name').value = '';
+			document.getElementById('filter-operator').value = '';
+			document.getElementById('filter-date-value').value = '';
+			document.getElementById('filter-time-value').value = '';
 		} else {
 			// Oh no, something isn't correct with the inputs
 			showToast('Attention', 'Ensure filter inputs has data entered correctly');
 		}
+
+});
+
+// Click event for adding filter to the query items
+document.getElementById('add-filter-item').addEventListener('click', () => {
+	if (filterCount === 0) {
+		filter = document.getElementById('filter-string').value;
+		if (filter.length > 0) {
+			const filterHtml = buildItemHtml(`filter`, {filter});
+			document.getElementById('container-filter').insertAdjacentHTML('afterbegin', filterHtml);
+			const newFilterItem = document.getElementById('filter');
+			document.getElementById(`close-filter`).addEventListener('click', () => { newFilterItem.remove(); filter = ''; filterCount = 0 });
+			filterCount++
+			document.getElementById('filter-string').value = '';
+		} else {
+			showToast('Attention', 'Filter cannot be empty');
+		}
+	}
+
+	
 });
 
 //  Click event for filter clear all button
@@ -310,6 +322,7 @@ document.getElementById('filter-clear-all').addEventListener('click', () => {
 		showToast('Info', 'Canceled');
 	}
 });
+
 // click event for Remove all query items button
 document.getElementById('query-clear').addEventListener('click', () => {
 	const clearConfirm = confirm('Are you sure you want to remove all the query items and start over?');

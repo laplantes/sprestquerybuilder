@@ -68,6 +68,38 @@
 	gap: 1rem;
 }
 
+.container-expand-auto-select {
+	display: flex;
+	align-items: center;
+
+	& > * {
+		margin-left: 1rem;
+	}
+
+	& .expand-auto-select {
+		cursor: pointer;
+	}
+
+	@media all  and (max-width: 849px) {
+		height: 1rem;
+	}
+
+}
+
+.expand-property-value {
+	display: none;
+
+	@media all  and (max-width: 849px) {
+		width: 100%;
+		margin-right: -1rem;
+	}
+}
+
+#expand-auto-select:checked + .expand-auto-label + .expand-property-value {
+	display: block;
+}
+
+
 .container-filter-controls {
 	flex-wrap: nowrap;
 	justify-content: space-between;

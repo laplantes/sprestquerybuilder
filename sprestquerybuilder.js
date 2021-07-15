@@ -180,7 +180,6 @@ const insertText = (text, insertLocation) => {
 	insertLocation.selectionEnd = end + text.length;
 };
 
-
 const clearQueryContainers = (containers) => {
 	containers.forEach(container => {
 		clearContainer(container);
@@ -192,12 +191,8 @@ document.getElementById('expand-auto-select').addEventListener('change', () => {
 	document.getElementById('expand-property-value').value = '';
 });
 
-// Click event for the expand button
-document.getElementById('add-expand-item').addEventListener('click', () => {
-	// get the expand input  and expanded value input values and convert any spaces to use the SharePoint format for spaces in the column name using a regex
-	const parent = document.getElementById('expand-property-name').value.replace(/ /g, '_x0020_'),
-	child = document.getElementById('expand-property-value').value;
-	
+// 
+const createExpand = (parent, child) => {
 	// Ensure there is content to add
 	if (parent) {
 		// Build the new object using the global expandCount and the functionally scoped parent
@@ -220,14 +215,23 @@ document.getElementById('add-expand-item').addEventListener('click', () => {
 		showToast(`Attention`, `Enter a column name to add to the Expand query`);
 	}
 
-	// TODO: Add section to call the selects function and add the full expanded item (parent/child)
+	if (parent && child) {
+		createSelect(`${parent}/${child}`)
+	}
 
+};
+
+// Click event for the expand button
+document.getElementById('add-expand-item').addEventListener('click', () => {
+	// get the expand input  and expanded value input values and convert any spaces to use the SharePoint format for spaces in the column name using a regex
+	const parentValue = document.getElementById('expand-property-name').value.replace(/ /g, '_x0020_'),
+	childValue = document.getElementById('expand-property-value').value;
+	// call the function to create the expand
+	createExpand(parentValue, childValue);
 });
 
-// Click event for select button
-document.getElementById('add-select-item').addEventListener('click', () => {
-	// get the select input value and convert any spaces to use the SharePoint format for spaces using a regex
-	const selectValue = document.getElementById('select-column-name').value.replace(/ /g, '_x0020_');
+// 
+const createSelect = (selectValue) => {
 	// Ensure there is content to add
 	if (selectValue) {
 		// Build the new object using the global selectCount and the functionally scoped selectValue
@@ -249,13 +253,19 @@ document.getElementById('add-select-item').addEventListener('click', () => {
 	} else {
 		showToast(`Attention`, `Enter a column name to add to the Select query`);
 	}
+};
+
+// Click event for select button
+document.getElementById('add-select-item').addEventListener('click', () => {
+	// get the select input value and convert any spaces to use the SharePoint format for spaces using a regex
+	const value = document.getElementById('select-column-name').value.replace(/ /g, '_x0020_');
+	// Call the function to build and create the select item
+	createSelect(value);
 });
 
-// Click event for orderby button TODO: add comments
-document.getElementById('add-orderby-item').addEventListener('click', () => {
-	const orderByValue = document.getElementById('orderby-column-name').value.replace(/ /g, '_x0020_'),
-	orderByOperator = document.getElementById('orderby-operator').value;
-	if (orderBy.columnName ? true : false) {
+// 
+const createOrderby = (orderByValue, orderByOperator) => {
+		if (orderBy.columnName ? true : false) {
 		showToast(`Attention`, `OrderBy has already been assigned. Remove existing entry before reassigning.`);
 	} else {
 		if (orderByValue && orderByOperator) {
@@ -272,12 +282,18 @@ document.getElementById('add-orderby-item').addEventListener('click', () => {
 			showToast(`Attention`, `Ensure all fields contain entries to add orderby to the query`);
 		}
 	}
+};
+
+// Click event for orderby button TODO: add comments
+document.getElementById('add-orderby-item').addEventListener('click', () => {
+	const value = document.getElementById('orderby-column-name').value.replace(/ /g, '_x0020_'),
+		operator = document.getElementById('orderby-operator').value;
+	//  Call the function to create the orderby
+	createOrderby(value, operator);
 });
 
-// Click event for add top button
-document.getElementById('add-top-item').addEventListener('click', () => {
-	console.log('Add top item clicked');
-	const topValue = document.getElementById('top-number').value;
+// 
+const createTop = (topValue) => {
 	if ((topNumber === null) && (topValue > 0)) {
 		topNumber = topValue;
 		const topHtml = buildItemHtml(`top`, {topNumber});
@@ -290,11 +306,17 @@ document.getElementById('add-top-item').addEventListener('click', () => {
 	} else {
 		showToast(`Attention`, `A Row Limit value has already been assigned. Remove the current Row Limit before adding a new value.`);
 	}
+}
+
+// Click event for add top button
+document.getElementById('add-top-item').addEventListener('click', () => {
+	const value = document.getElementById('top-number').value;
+	// Call the function to create the row limit item
+	createTop(value);
 });
 
 // Click event for generate query button
 document.getElementById('generate-query').addEventListener('click', () => {
-	console.log('Generate Query clicked');
 	const queryContainer = document.getElementById('query'),
 	queryCompleteString = buildQueryString(expands, selects, filter, orderBy, topNumber);
 	(queryContainer.innerText !== '') ? queryContainer.innerText = '' : false;
@@ -321,13 +343,8 @@ document.getElementById('button-filter-close').addEventListener('click', () => {
 	insertText(')', filterStringContainer);
 });
 
-// Click event for add to filter button
-document.getElementById('add-filter-query-item').addEventListener('click', () => {
-	let columnName = document.getElementById('filter-column-name').value.replace(/ /g, '_x0020_'),
-		operator = document.getElementById('filter-operator').value,
-		value = document.getElementById('filter-value').value,
-		date = document.getElementById('filter-date-value').value,
-		time = document.getElementById('filter-time-value').value;
+//
+const createQueryFilter = (columnName, operator, value, date, time) => {
 		if (value && (date || time)) {
 			showToast('Attention', 'Choose either a value -OR- a date and time')
 		} else if (columnName && operator && ( value && !(time || date) ) ) {
@@ -347,11 +364,20 @@ document.getElementById('add-filter-query-item').addEventListener('click', () =>
 			// Oh no, something isn't correct with the inputs
 			showToast('Attention', 'Ensure filter inputs has data entered correctly');
 		}
+};
 
+// Click event for add to filter button
+document.getElementById('add-filter-query-item').addEventListener('click', () => {
+	let filterColumnName = document.getElementById('filter-column-name').value.replace(/ /g, '_x0020_'),
+		filterOperator = document.getElementById('filter-operator').value,
+		filterValue = document.getElementById('filter-value').value,
+		filterDate = document.getElementById('filter-date-value').value,
+		filterTime = document.getElementById('filter-time-value').value;
+	createQueryFilter(filterColumnName, filterOperator, filterValue, filterDate, filterTime);
 });
 
-// Click event for adding filter to the query items
-document.getElementById('add-filter-item').addEventListener('click', () => {
+//
+const createFilter = () => {
 	if (filterCount === 0) {
 		filter = document.getElementById('filter-string').value;
 		if (filter.length > 0) {
@@ -360,16 +386,17 @@ document.getElementById('add-filter-item').addEventListener('click', () => {
 			const newFilterItem = document.getElementById('filter');
 			document.getElementById(`close-filter`).addEventListener('click', () => { newFilterItem.remove(); filter = ''; filterCount = 0 });
 			filterCount++
-			document.getElementById('filter-string').value = '';
+			// document.getElementById('filter-string').value = '';
 		} else {
 			showToast('Attention', 'Filter cannot be empty');
 		}
 	} else {
 		showToast('Attention', 'A Filter value has already been assigned. Remove the current Filter before adding a new value.')
-	}
+	}	
+};
 
-	
-});
+// Click event for adding filter to the query items
+document.getElementById('add-filter-item').addEventListener('click', () => { createFilter() });
 
 //  Click event for filter clear all button
 document.getElementById('filter-clear-all').addEventListener('click', () => {
@@ -410,7 +437,6 @@ document.getElementById('copy-query').addEventListener('click', () => {
 
 // Click event for test url button
 document.getElementById('test-url-button').addEventListener('click', () => {
-	console.log('Test URL clicked');
 	const generatedQueryString = document.getElementById('query').innerText;
 	if (generatedQueryString.length > 0) {
 		testUrl(generatedQueryString);

@@ -54,6 +54,14 @@ const showToast = (title=`Enter a title`, message=`Enter a message, even a short
  */
 const buildItemHtml = (type, itemData) => {
 	switch(type) {
+		case 'expand':
+			return `
+				<div  id="${type}-${itemData.id}" class="box-item">
+					<div><b>${type}:</b> ${itemData.value}</div>
+					<span id="close-expand-${itemData.id}">X</span>
+				</div>
+			`;
+
 		case 'select':
 			return `
 				<div  id="${type}-${itemData.id}" class="box-item">
@@ -93,12 +101,25 @@ const buildItemHtml = (type, itemData) => {
 };
 
 //  TODO: make and / or available as a choice for multiple filters
-const buildQueryString = (querystringSelects=``, querystringFilters=``, orderby={columnName: ``, operator: ``}, top=0) => {
+const buildQueryString = (querystringExpands=``, querystringSelects=``, querystringFilter=``, orderby={columnName: ``, operator: ``}, top=0) => {
 	let fullQueryString = `?`,
 		queryCount = 0;
 
+	if (Object.keys(querystringExpands).length > 0) {
+		let expandsArray = [];
+		// Populate the contents of the expandsArray
+		for (const item of Object.entries(querystringExpands)) {
+			expandsArray.push(item[1].value)
+		}
+		const expandsString= expandsArray.join(',');
+		fullQueryString += `$expand=`;
+		fullQueryString += `${expandsString}`;
+		queryCount++;
+	}
+
 
 	if (Object.keys(querystringSelects).length > 0) {
+		(queryCount > 0) ? fullQueryString += `&` : false;
 		let selectsArray = [];
 		// Populate the contents of the selectsArray
 		for (const item of Object.entries(querystringSelects)) {
@@ -114,21 +135,19 @@ const buildQueryString = (querystringSelects=``, querystringFilters=``, orderby=
 		(queryCount > 0) ? fullQueryString += `&` : false;
 		fullQueryString += `$orderby=${orderby.columnName} ${orderby.operator}`;
 		queryCount++;
-		
 	}
-
-	if (filter.length > 0) {
-		(queryCount > 0) ? fullQueryString += `&` : false;
-		fullQueryString += `$filter=${filter}`;
-		queryCount++;
-	}
-
+	
 	if (top > 0) {
 		(queryCount > 0) ? fullQueryString += `&` : false;
 		fullQueryString += `$top=${top}`;
 		queryCount++;
 	}
-	
+		
+	if (querystringFilter.length > 0) {
+		(queryCount > 0) ? fullQueryString += `&` : false;
+		fullQueryString += `$filter=${filter}`;
+		queryCount++;
+	}
 
 	return fullQueryString;
 };
@@ -149,6 +168,18 @@ const testUrl = (queryString) => {
 	}
 };
 
+// insert text into the specified location, or currently active location
+const insertText = (text, insertLocation) => {
+	insertLocation.focus();
+	const start = insertLocation.selectionStart,
+		end = insertLocation.selectionEnd;
+	insertLocation.setRangeText(text, start, end)
+	// use the three lines below to insert text and leave cursor at end of inserted area
+	insertLocation.focus();
+	insertLocation.selectionStart = end + text.length;
+	insertLocation.selectionEnd = end + text.length;
+};
+
 
 const clearQueryContainers = (containers) => {
 	containers.forEach(container => {
@@ -156,9 +187,46 @@ const clearQueryContainers = (containers) => {
 	});
 }
 
+// On Change event listener for auto add to select input
+document.getElementById('expand-auto-select').addEventListener('change', () => {
+	document.getElementById('expand-property-value').value = '';
+});
+
+// Click event for the expand button
+document.getElementById('add-expand-item').addEventListener('click', () => {
+	// get the expand input  and expanded value input values and convert any spaces to use the SharePoint format for spaces in the column name using a regex
+	const parent = document.getElementById('expand-property-name').value.replace(/ /g, '_x0020_'),
+	child = document.getElementById('expand-property-value').value;
+	
+	// Ensure there is content to add
+	if (parent) {
+		// Build the new object using the global expandCount and the functionally scoped parent
+		const newExpand = {id: expandCount, value: parent};
+		// Call the function to build out the required HTML to add the expand to the page
+		const newExpandHtml = buildItemHtml(`expand`, newExpand);
+		// Insert the newly created HTML
+		document.getElementById('container-expands').insertAdjacentHTML('beforeend', newExpandHtml);
+		// add the new expand into the expands object
+		expands[`${expandCount}`] = newExpand;
+		// Get the newly created HTML element
+		const newExpandItem = document.getElementById(`expand-${expandCount}`);
+		// Add an event listener to the newly created items remove button for removing the item from the page and from the expands object
+		document.getElementById(`close-expand-${expandCount}`).addEventListener('click', () => { newExpandItem.remove(); delete expands[`${newExpand.id}`]; });
+		// clear the input in the form in preparation for the next item to be added
+		document.getElementById('expand-property-name').value = "";
+		// Increment the select counter		
+		expandCount++;
+	} else {
+		showToast(`Attention`, `Enter a column name to add to the Expand query`);
+	}
+
+	// TODO: Add section to call the selects function and add the full expanded item (parent/child)
+
+});
+
 // Click event for select button
 document.getElementById('add-select-item').addEventListener('click', () => {
-	// get the select input value and convert any spaces to use the SharePoint format for spaces
+	// get the select input value and convert any spaces to use the SharePoint format for spaces using a regex
 	const selectValue = document.getElementById('select-column-name').value.replace(/ /g, '_x0020_');
 	// Ensure there is content to add
 	if (selectValue) {
@@ -174,12 +242,12 @@ document.getElementById('add-select-item').addEventListener('click', () => {
 		const newSelectItem = document.getElementById(`select-${selectCount}`);
 		// Add an event listener to the newly created items remove button for removing the item from the page and from the selects object
 		document.getElementById(`close-select-${selectCount}`).addEventListener('click', () => { newSelectItem.remove(); delete selects[`${newSelect.id}`]; });
-		// clear the input in the form in preperation for the next item to be added
+		// clear the input in the form in preparation for the next item to be added
 		document.getElementById('select-column-name').value = "";
 		// Increment the select counter		
 		selectCount++;
 	} else {
-		showToast(`Attention`, `Enter a column name to add to the select query`);
+		showToast(`Attention`, `Enter a column name to add to the Select query`);
 	}
 });
 
@@ -228,22 +296,10 @@ document.getElementById('add-top-item').addEventListener('click', () => {
 document.getElementById('generate-query').addEventListener('click', () => {
 	console.log('Generate Query clicked');
 	const queryContainer = document.getElementById('query'),
-	queryCompleteString = buildQueryString(selects, filter, orderBy, topNumber);
+	queryCompleteString = buildQueryString(expands, selects, filter, orderBy, topNumber);
 	(queryContainer.innerText !== '') ? queryContainer.innerText = '' : false;
 	queryContainer.innerText = queryCompleteString;
-});
-
-// insert text into the specified location, or currently active location
-const insertText = (text, insertLocation) => {
-	insertLocation.focus();
-	const start = insertLocation.selectionStart,
-		end = insertLocation.selectionEnd;
-	insertLocation.setRangeText(text, start, end)
-	// use the three lines below to insert text and leave cursor at end of inserted area
-	insertLocation.focus();
-	insertLocation.selectionStart = end + text.length;
-	insertLocation.selectionEnd = end + text.length;
-};
+});	
 
 //  Click event for 'open selection'
 document.getElementById('button-filter-open').addEventListener('click', () => {
@@ -267,7 +323,7 @@ document.getElementById('button-filter-close').addEventListener('click', () => {
 
 // Click event for add to filter button
 document.getElementById('add-filter-query-item').addEventListener('click', () => {
-	let columnName = document.getElementById('filter-column-name').value,
+	let columnName = document.getElementById('filter-column-name').value.replace(/ /g, '_x0020_'),
 		operator = document.getElementById('filter-operator').value,
 		value = document.getElementById('filter-value').value,
 		date = document.getElementById('filter-date-value').value,
@@ -308,6 +364,8 @@ document.getElementById('add-filter-item').addEventListener('click', () => {
 		} else {
 			showToast('Attention', 'Filter cannot be empty');
 		}
+	} else {
+		showToast('Attention', 'A Filter value has already been assigned. Remove the current Filter before adding a new value.')
 	}
 
 	
@@ -323,7 +381,7 @@ document.getElementById('filter-clear-all').addEventListener('click', () => {
 	}
 });
 
-// click event for Remove all query items button
+// Click event for Remove all query items button
 document.getElementById('query-clear').addEventListener('click', () => {
 	const clearConfirm = confirm('Are you sure you want to remove all the query items and start over?');
 	if (clearConfirm) {
@@ -336,7 +394,7 @@ document.getElementById('query-clear').addEventListener('click', () => {
 	}
 });
 
-//  click event for copy to clipboard
+//  Click event for copy to clipboard
 document.getElementById('copy-query').addEventListener('click', () => {
 	const areaToCopy = async () => {return document.getElementById('query').innerText;};
 	areaToCopy().then(async (copied) => {

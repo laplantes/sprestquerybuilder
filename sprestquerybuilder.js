@@ -161,12 +161,6 @@ const buildQueryString = (querystringExpands=``, querystringSelects=``, querystr
 	return fullQueryString;
 };
 
-
-// ################################
-// Clear the info bar message body
-//  TODO: add this to the docs for the info bar
-// document.getElementById('close-notice').addEventListener('click', clearInfoBar);
-
 /**
  * Function that collects the URL and list or library name, then uses the built and passed in query string to load a new page with the results
  * @param {string} queryString query string that user has created and will be testing
@@ -197,19 +191,16 @@ const insertText = (text, insertLocation) => {
 	insertLocation.selectionEnd = end + text.length;
 };
 
-
-const clearQueryContainers = (containers) => {
-	containers.forEach(container => {
-		clearContainer(container);
-	});
-}
-
 // On Change event listener for auto add to select input
 document.getElementById('expand-auto-select').addEventListener('change', () => {
 	document.getElementById('expand-property-value').value = '';
 });
 
-// 
+/**
+ * Create the expand item. If you user requests the auto add to select then the parent/child is sent to the createSelect function to create the select item
+ * @param {string} parent string of the parameter to be expanded
+ * @param {string} child string of the key you are trying to access within the parent
+ */
 const createExpand = (parent, child) => {
 	// Ensure there is content to add
 	if (parent) {
@@ -248,7 +239,10 @@ document.getElementById('add-expand-item').addEventListener('click', () => {
 	createExpand(parentValue, childValue);
 });
 
-// 
+/**
+ * Takes in the string and builds the select item
+ * @param {string} selectValue value for select to be created with
+ */
 const createSelect = (selectValue) => {
 	// Ensure there is content to add
 	if (selectValue) {
@@ -281,7 +275,11 @@ document.getElementById('add-select-item').addEventListener('click', () => {
 	createSelect(value);
 });
 
-// 
+/**
+ * takes in the column name and operator to build out the orderby part of the query
+ * @param {string} orderByValue column name passed in from the click even
+ * @param {string} orderByOperator operator passed in from the click event
+ */
 const createOrderby = (orderByValue, orderByOperator) => {
 		if (orderBy.columnName ? true : false) {
 		showToast(`Attention`, `OrderBy has already been assigned. Remove existing entry before reassigning.`);
@@ -301,7 +299,7 @@ const createOrderby = (orderByValue, orderByOperator) => {
 	}
 };
 
-// Click event for orderby button TODO: add comments
+// Click event for orderby button
 document.getElementById('add-orderby-item').addEventListener('click', () => {
 	const value = document.getElementById('orderby-column-name').value.replace(/ /g, '_x0020_'),
 		operator = document.getElementById('orderby-operator').value;
@@ -309,7 +307,10 @@ document.getElementById('add-orderby-item').addEventListener('click', () => {
 	createOrderby(value, operator);
 });
 
-// 
+/**
+ * Takes in the number and builds the row limit section of the query
+ * @param {number} topValue number passed in from the click event
+ */
 const createTop = (topValue) => {
 	if ((topNumber === null) && (topValue > 0)) {
 		topNumber = topValue;
@@ -328,7 +329,6 @@ const createTop = (topValue) => {
 // Click event for add top button
 document.getElementById('add-top-item').addEventListener('click', () => {
 	const value = document.getElementById('top-number').value;
-	// Call the function to create the row limit item
 	createTop(value);
 });
 
@@ -360,27 +360,34 @@ document.getElementById('button-filter-close').addEventListener('click', () => {
 	insertText(')', filterStringContainer);
 });
 
-//
+/**
+ * 
+ * @param {string} columnName value passed in from the click event
+ * @param {string} operator value passed in from the click event
+ * @param {string} value value passed in from the click event
+ * @param {string} date value passed in from the click event
+ * @param {string} time value passed in from the click event
+ */
 const createQueryFilter = (columnName, operator, value, date, time) => {
-		if (value && (date || time)) {
-			showToast('Attention', 'Choose either a value -OR- a date and time')
-		} else if (columnName && operator && ( value && !(time || date) ) ) {
-			// validation passes for all required fields and the value field
-			insertText(`${columnName} ${operator} ${value}`, filterStringContainer);
-			document.getElementById('filter-column-name').value = '';
-			document.getElementById('filter-operator').value = '';
-			document.getElementById('filter-value').value = ';'
-		} else if (columnName && operator && ( !value && (time && date) ) ) {
-			// validation passes for all required fields and the value field
-			insertText(`${columnName} ${operator} '${date}T${time}Z'`, filterStringContainer);
-			document.getElementById('filter-column-name').value = '';
-			document.getElementById('filter-operator').value = '';
-			document.getElementById('filter-date-value').value = '';
-			document.getElementById('filter-time-value').value = '';
-		} else {
-			// Oh no, something isn't correct with the inputs
-			showToast('Attention', 'Ensure filter inputs has data entered correctly');
-		}
+	if (value && (date || time)) {
+		showToast('Attention', 'Choose either a value -OR- a date and time')
+	} else if (columnName && operator && ( value && !(time || date) ) ) {
+		// validation passes for all required fields and the value field
+		insertText(`${columnName} ${operator} ${value}`, filterStringContainer);
+		document.getElementById('filter-column-name').value = '';
+		document.getElementById('filter-operator').value = '';
+		document.getElementById('filter-value').value = ';'
+	} else if (columnName && operator && ( !value && (time && date) ) ) {
+		// validation passes for all required fields and the value field
+		insertText(`${columnName} ${operator} '${date}T${time}Z'`, filterStringContainer);
+		document.getElementById('filter-column-name').value = '';
+		document.getElementById('filter-operator').value = '';
+		document.getElementById('filter-date-value').value = '';
+		document.getElementById('filter-time-value').value = '';
+	} else {
+		// Oh no, something isn't correct with the inputs
+		showToast('Attention', 'Ensure filter inputs has data entered correctly');
+	}
 };
 
 // Click event for add to filter button
@@ -393,17 +400,19 @@ document.getElementById('add-filter-query-item').addEventListener('click', () =>
 	createQueryFilter(filterColumnName, filterOperator, filterValue, filterDate, filterTime);
 });
 
-//
-const createFilter = () => {
+/**
+ * Takes in a filter string and creates a filter item
+ * @param {string} filterString string built from the filter section
+ */
+const createFilter = (filterString) => {
 	if (filterCount === 0) {
-		filter = document.getElementById('filter-string').value;
+		filter = filterString;
 		if (filter.length > 0) {
 			const filterHtml = buildItemHtml(`filter`, {filter});
 			document.getElementById('container-filter').insertAdjacentHTML('afterbegin', filterHtml);
 			const newFilterItem = document.getElementById('filter');
 			document.getElementById(`close-filter`).addEventListener('click', () => { newFilterItem.remove(); filter = ''; filterCount = 0 });
 			filterCount++
-			// document.getElementById('filter-string').value = '';
 		} else {
 			showToast('Attention', 'Filter cannot be empty');
 		}
@@ -412,8 +421,11 @@ const createFilter = () => {
 	}	
 };
 
-// Click event for adding filter to the query items
-document.getElementById('add-filter-item').addEventListener('click', () => { createFilter() });
+// Click event for adding the filter to the query items
+document.getElementById('add-filter-item').addEventListener('click', () => {
+	const filterValue = document.getElementById('filter-string').value;
+	createFilter(filterValue)
+});
 
 //  Click event for filter clear all button
 document.getElementById('filter-clear-all').addEventListener('click', () => {
@@ -430,7 +442,9 @@ document.getElementById('query-clear').addEventListener('click', () => {
 	const clearConfirm = confirm('Are you sure you want to remove all the query items and start over?');
 	if (clearConfirm) {
 		let containersToClear = Array.from(document.getElementById('query-box-preview').children);
-		clearQueryContainers(containersToClear);
+		containersToClear.forEach(container => {
+			clearContainer(container);
+		});
 		document.getElementById('query').innerText = '';
 		clearValues();
 	} else {

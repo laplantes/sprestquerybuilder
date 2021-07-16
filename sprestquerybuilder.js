@@ -11,6 +11,9 @@ let selects = {},
 	filter = '',
 	filterCount = 0;
 
+/**
+ * Used to clear all the values when the removing all items from the query
+ */
 const clearValues = () => {
 	selects = {},
 	selectCount = 0,
@@ -95,12 +98,19 @@ const buildItemHtml = (type, itemData) => {
 			`;
 
 		default:
-			console.log("error");
 			break;
 	}
 };
 
-//  TODO: make and / or available as a choice for multiple filters
+/**
+ * Function that builds the query string to be inserted into the DOM based on the user inputs for each section
+ * @param {object} querystringExpands object containing objects of expands added by the user
+ * @param {object} querystringSelects object containing objects of selects added by the user
+ * @param {string} querystringFilter string of the full filter innerText
+ * @param {object} orderby object containing the columnName and the operator for orderby
+ * @param {number} top number of rows to select
+ * @returns {string} fullQueryString full query string to be inserted into the DOM
+ */
 const buildQueryString = (querystringExpands=``, querystringSelects=``, querystringFilter=``, orderby={columnName: ``, operator: ``}, top=0) => {
 	let fullQueryString = `?`,
 		queryCount = 0;
@@ -116,7 +126,6 @@ const buildQueryString = (querystringExpands=``, querystringSelects=``, querystr
 		fullQueryString += `${expandsString}`;
 		queryCount++;
 	}
-
 
 	if (Object.keys(querystringSelects).length > 0) {
 		(queryCount > 0) ? fullQueryString += `&` : false;
@@ -145,7 +154,7 @@ const buildQueryString = (querystringExpands=``, querystringSelects=``, querystr
 		
 	if (querystringFilter.length > 0) {
 		(queryCount > 0) ? fullQueryString += `&` : false;
-		fullQueryString += `$filter=${filter}`;
+		fullQueryString += `$filter=${querystringFilter}`;
 		queryCount++;
 	}
 
@@ -158,6 +167,10 @@ const buildQueryString = (querystringExpands=``, querystringSelects=``, querystr
 //  TODO: add this to the docs for the info bar
 // document.getElementById('close-notice').addEventListener('click', clearInfoBar);
 
+/**
+ * Function that collects the URL and list or library name, then uses the built and passed in query string to load a new page with the results
+ * @param {string} queryString query string that user has created and will be testing
+ */
 const testUrl = (queryString) => {
 	const testListName = document.getElementById('test-list-name').value,
 	testUrl = document.getElementById('test-url').value;
@@ -168,7 +181,11 @@ const testUrl = (queryString) => {
 	}
 };
 
-// insert text into the specified location, or currently active location
+/**
+ * Function that takes in a string and inserts it into the provided element at the cursor location
+ * @param {string} text text to be inserted
+ * @param {object} insertLocation element where text will be inserted 
+ */
 const insertText = (text, insertLocation) => {
 	insertLocation.focus();
 	const start = insertLocation.selectionStart,
@@ -179,6 +196,7 @@ const insertText = (text, insertLocation) => {
 	insertLocation.selectionStart = end + text.length;
 	insertLocation.selectionEnd = end + text.length;
 };
+
 
 const clearQueryContainers = (containers) => {
 	containers.forEach(container => {
@@ -207,8 +225,9 @@ const createExpand = (parent, child) => {
 		const newExpandItem = document.getElementById(`expand-${expandCount}`);
 		// Add an event listener to the newly created items remove button for removing the item from the page and from the expands object
 		document.getElementById(`close-expand-${expandCount}`).addEventListener('click', () => { newExpandItem.remove(); delete expands[`${newExpand.id}`]; });
-		// clear the input in the form in preparation for the next item to be added
+		// clear the inputs in the form in preparation for the next item to be added
 		document.getElementById('expand-property-name').value = "";
+		document.getElementById('expand-property-value').value = "";
 		// Increment the select counter		
 		expandCount++;
 	} else {
@@ -218,7 +237,6 @@ const createExpand = (parent, child) => {
 	if (parent && child) {
 		createSelect(`${parent}/${child}`)
 	}
-
 };
 
 // Click event for the expand button
@@ -269,7 +287,6 @@ const createOrderby = (orderByValue, orderByOperator) => {
 		showToast(`Attention`, `OrderBy has already been assigned. Remove existing entry before reassigning.`);
 	} else {
 		if (orderByValue && orderByOperator) {
-			console.log(`The value of orderBy is: ${orderByValue}`);
 			orderBy.columnName = orderByValue;
 			orderBy.operator = orderByOperator;
 			const newOrderbyHtml = buildItemHtml(`orderby`, orderBy);
@@ -355,7 +372,7 @@ const createQueryFilter = (columnName, operator, value, date, time) => {
 			document.getElementById('filter-value').value = ';'
 		} else if (columnName && operator && ( !value && (time && date) ) ) {
 			// validation passes for all required fields and the value field
-			insertText(`${columnName} ${operator} '${date}T${time}:00Z'`, filterStringContainer);
+			insertText(`${columnName} ${operator} '${date}T${time}Z'`, filterStringContainer);
 			document.getElementById('filter-column-name').value = '';
 			document.getElementById('filter-operator').value = '';
 			document.getElementById('filter-date-value').value = '';

@@ -1,2 +1,57 @@
+@use "sass:color";
+
+//  Variables
+$borderRadius: 0.25rem;
 $elementCalculatedPadding: calc(0.5rem - 1px);
 
+// Colors
+$primary: hsl(260, 4%, 14%);
+$secondary: hsl(205, 41%, 67%);
+$borderColor: color.adjust($secondary, $lightness: -10%);
+$buttonShadow: hsl(0, 0%, 33%);
+$toastTitleBackgroundColor: #111;
+$toastMessageBackgroundColor: #333;
+
+// Mixins
+
+@mixin width-fit-content {
+	width: -moz-fit-content;
+	width: fit-content;
+}
+
+@mixin min-width-fit-content {
+	min-width: -moz-fit-content;
+	min-width: fit-content;
+}
+
+// Functions
+@function getElementTextColor() {
+    @if color.lightness($secondary) > 55% {
+        @return color.adjust($secondary, $lightness: -100%);
+    }
+    @else if color.lightness($secondary) <= 55% {
+        @return color.adjust($secondary, $lightness: +100%);
+    }
+}
+
+@function getTitleTextColor() {
+    @if color.lightness($primary) > 55% {
+        @return color.adjust($primary, $lightness: -100%);
+    }
+    @else if color.lightness($primary) <= 55% {
+        @return color.adjust($primary, $lightness: +100%);
+    }
+}
+
+@function getElementHoverColor() {
+    @if color.lightness($secondary) < 55% {
+        @return color.adjust($secondary, $lightness: -10%);
+    }
+    @else if color.lightness($secondary) >= 55% {
+        @return color.adjust($secondary, $lightness: +10%);
+    }
+}
+
+
+$elementTextColor: getElementTextColor();
+$linkHover: getElementHoverColor();

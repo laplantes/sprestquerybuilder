@@ -13,15 +13,16 @@
 		<div class="container-app-main">
 			<section>
 				<div>
-					<h3 class="title-query">Expand a Value</h3>
+					<h2 class="title-query">Expand a Value</h2>
 					<div class="container-query-type box-raised">
 						<div class="container-query-inputs">
+							<label for="expand-property-name" class="sr-only">expand-property-name</label>
 							<input id="expand-property-name" class="input" type="text" placeholder="Property to expand">
 							<div class="container-expand-auto-select">								
 								<input id="expand-auto-select" class="expand-auto-select" name="expand-auto-select" class="input" type="checkbox">
 								<label class="expand-auto-label" for="expand-auto-select">Auto add to select</label>
 								<input id="expand-property-value" class="input expand-property-value" name="expand-property-value" type="text" placeholder="Expanded value">
-								<label class="expand-property-label" for="expand-property-value"></label>
+								<label class="expand-property-label sr-only" for="expand-property-value">expand-property-value</label>
 							</div>
 						</div>
 						<div class="container-query-button">
@@ -30,9 +31,10 @@
 					</div>
 				</div>
 				<div>
-					<h3 class="title-query">Add a Select item</h3>
+					<h2 class="title-query">Add a Select item</h2>
 					<div class="container-query-type box-raised">
 						<div class="container-query-inputs">
+							<label for="select-column-name" class="sr-only">select-column-name</label>
 							<input id="select-column-name" class="input" type="text" placeholder="Enter column name">
 						</div>
 						<div class="container-query-button">
@@ -41,10 +43,12 @@
 					</div>
 				</div>
 				<div>
-					<h3 class="title-query">Add an Orderby</h3>
+					<h2 class="title-query">Add an Orderby</h2>
 					<div class="container-query-type box-raised">
 						<div class="container-query-inputs">
+							<label for="orderby-column-name" class="sr-only">orderby-column-name</label>
 							<input id="orderby-column-name" class="input" type="text" placeholder="Enter column name">
+							<label for="orderby-operator" class="sr-only">orderby-operator</label>
 							<select id="orderby-operator" class="dropdown" name="orderby-operator">
 								<option disabled selected value> -- select an option -- </option>
 								<option value="asc">Ascending</option>
@@ -57,10 +61,11 @@
 					</div>
 				</div>
 				<div>
-					<h3 class="title-query">Add a Row Limit</h3>
+					<h2 class="title-query">Add a Row Limit</h2>
 					<div class="container-query-type box-raised">
 						<div class="container-query-inputs">
 							<div class="inputLabel">Number of results</div>
+							<label for="top-number" class="sr-only">top-number</label>
 							<input id="top-number" class="input" type="number" min="1" value="100" placeholder="100">
 						</div>
 						<div class="container-query-button">
@@ -69,7 +74,7 @@
 					</div>
 				</div>
 				<div>
-					<h3 class="title-query">Add a Filter</h3>
+					<h2 class="title-query">Add a Filter</h2>
 					<div class="container-query-type container-query-type-filter box-raised">
 						<div class="container-query-inputs container-filter-controls">
 							<div class="container-filter-inputs">
@@ -80,7 +85,9 @@
 									<button id="button-filter-close" class="btn">Close Section )</button>
 								</div>
 								<div class="container-filter-actions">
+									<label for="filter-column-name" class="sr-only">filter-column-name</label>
 									<input id="filter-column-name" class="input" type="text" placeholder="Enter column name">
+									<label for="filter-operator" class="sr-only">filter-operator</label>
 									<select id="filter-operator" class="dropdown" name="filter-operator">
 										<option disabled selected value> -- select an option -- </option>
 										<option value="eq">Equal</option>
@@ -92,9 +99,12 @@
 									</select>
 								</div>
 								<div class="container-filter-actions">
+									<label for="filter-value" class="sr-only">filter-value</label>
 									<input id="filter-value" class="input" type="text" placeholder="Enter value">
 									<B>OR</B>
+									<label for="filter-date-value" class="sr-only">filter-date-value</label>
 									<input id="filter-date-value" class="input" type="date" name="date" id="date">
+									<label for="filter-time-value" class="sr-only">filter-time-value</label>
 									<input id="filter-time-value" class="input" type="time" name="time" id="time" step="1">
 								</div>
 							</div>
@@ -107,6 +117,7 @@
 								</div>
 							</div>
 						</div>
+						<label for="filter-string" class="sr-only">filter-string</label>
 						<textarea name="filter-string" id="filter-string" class="filter-string box-inset"></textarea>
 						<div class="container-query-button">
 							<button id="add-filter-item" class="btn">Add to query</button>
@@ -117,7 +128,7 @@
 			<section>
 				<div class="container-query-current">
 					<div class="container-query-current-header">
-						<h3 class="title-query">Current query items</h3>
+						<h2 class="title-query">Current query items</h2>
 						<button id="query-clear" class="btn">Remove All</button>
 					</div>
 					<div id="query-box-preview" class="query-box box-inset">
@@ -140,20 +151,28 @@
 					<div class="chevron-down"></div>
 				</div>
 				<div class="cushion"></div>
-				<h3 class="title-query">Query string</h3>
-				<div id="query" class="query-box box-inset"></div>
+				<div>
+					<h2 class="title-query">Query string</h2>
+					<div id="query" class="query-box box-inset"></div>
+				</div>
 				<div class="cushion"></div>
 				<div class="center-child">
 					<button id="copy-query" class="btn">Copy to Clipboard</button>
 				</div>
 				<div class="cushion"></div>
 				<div class="container-test-query box-raised">
-					<h3 class="title-query">Add a list or library name</h3>
-					<input id="test-list-name" class="input" type="text" class="test-url" placeholder="Enter List or Library Name">
-					<h3 class="title-query">Enter a URL to test</h3>
-					<div class="container-url-test">
-						<input id="test-url" class="input" type="text" class="test-url" placeholder="Enter URL">
-						<button id="test-url-button" class="btn">TEST</button>
+					<div>
+						<h2 class="title-query">Add a list or library name</h2>
+						<label for="test-list-name" class="sr-only">test-list-name</label>
+						<input id="test-list-name" class="input" type="text" class="test-url" placeholder="Enter List or Library Name">
+					</div>
+					<div>
+						<h2 class="title-query">Enter a URL to test</h2>
+						<div class="container-url-test">
+							<input id="test-url" class="input" type="text" class="test-url" placeholder="Enter URL">
+							<label for="test-url" class="sr-only">test-url</label>
+							<button id="test-url-button" class="btn">TEST</button>
+						</div>
 					</div>
 				</div>
 			</section>

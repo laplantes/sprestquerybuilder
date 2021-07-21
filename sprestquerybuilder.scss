@@ -1,5 +1,6 @@
 @use './node_modules/initialize-css/dist/initialize';
 @use 'base';
 @use 'settings';
-@use 'espstyles';
+@use 'components';
 @use 'main';
+@use 'toast';

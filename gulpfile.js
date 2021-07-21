@@ -10,7 +10,8 @@ const gulp = require("gulp"),
 // define file locations
 const html = [".\\sprestquerybuilder.html"],
 	scss = [".\\sprestquerybuilder.scss"],
-	js = [".\\sprestquerybuilder.js"];
+	js = [".\\sprestquerybuilder.js"],
+	images = [".\\important-red.svg"];
 
 let dest = ".\\devdist";
 
@@ -64,5 +65,14 @@ gulp.task("deployJs", () => {
 	);
 });
 
+// create a task to process the js files
+gulp.task("deployImages", () => {
+	return (
+		gulp
+		.src(images)
+		.pipe(gulp.dest(dest))
+	);
+});
+
 // define a default task
-gulp.task("default", gulp.parallel("deployHtml","deployScss","deployJs"));
+gulp.task("default", gulp.parallel("deployHtml","deployScss","deployJs","deployImages"));

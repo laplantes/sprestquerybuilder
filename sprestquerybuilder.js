@@ -46,7 +46,9 @@ const showToast = (title=`Enter a title`, message=`Enter a message, even a short
 	document.getElementById('toast-message').innerText = message;
     const element = document.getElementById('toast')
     element.classList.add('show');
-    setTimeout(() => { element.classList.remove('show'); }, 5000);
+    let displayTime;
+	(message.length < 5) ? displayTime = 3000 : displayTime = message.length*500;
+    setTimeout(() => { element.classList.remove('show'); }, displayTime);
 }
 
 /**

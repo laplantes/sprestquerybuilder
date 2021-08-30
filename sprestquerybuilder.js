@@ -47,7 +47,7 @@ const showToast = (title=`Enter a title`, message=`Enter a message, even a short
     const element = document.getElementById('toast')
     element.classList.add('show');
     setTimeout(() => { element.classList.remove('show'); }, 5000);
-}
+};
 
 /**
  * 	Function takes in a type and an object with data, based on type the HTML string is built for the item and is returned

@@ -6,11 +6,11 @@
 .title {
 	text-align: center;
     margin-top: 0;
-	padding: 0.5em 0;
+	padding: 0.25em 0;
 	color: settings.getTitleTextColor();
 	background-color: settings.$primary;
 	border-bottom: 2px solid color.adjust(settings.$primary, $lightness: -10%);
-    font-size: 2em;
+    font-size: 1.5em;
     font-weight: 600;
     line-height: 1.125;
 	user-select: none;
@@ -117,13 +117,17 @@
 }
 
 .footer {
+	position: fixed;
+    bottom: 0;
 	padding: 0.5em 0;
-	color: getTitleTextColor();
+	color: settings.getTitleTextColor();
 	background-color: settings.$primary;
 	border-top: 2px solid color.adjust(settings.$primary, $lightness: -10%);
     font-size: .5em;
     line-height: 1.125;
 	user-select: none;
+    width: 100%;
+    height: 0.5rem;
 }
 
 .chevron-down {

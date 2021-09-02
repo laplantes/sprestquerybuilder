@@ -1,20 +1,16 @@
 @use 'settings';
 
-.app {
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-	height: 100vh;
-}
-
 .container-app-main {
 	display: flex;
 	flex-basis: 85vh;
 	flex-wrap: wrap;
+	overflow-y: auto;
+    height: 90%;
 	justify-content: space-between;
 	width: clamp(40rem, 98vw, 120rem);
 	font-size: 0.8rem;
-	margin: 0 auto;
+	margin-inline: auto;
+    padding-bottom: calc(5rem - 10vh);
 
 	& > section {
 		margin: 0.5rem;
@@ -27,15 +23,6 @@
 
 	@media all and (max-width:849px) {
 	width: auto;
-
-		& section:not(:first-child) {
-			margin-top: 2rem;
-		}
-
-		& > section {
-			width: 100%;
-			height: auto;
-		}
 
 		.container-query-type {
 
@@ -54,6 +41,19 @@
 			margin-bottom: 1rem;
 		}
 
+		& section:not(:first-child) {
+			margin-top: 2rem;
+		}
+
+		& > section {
+			width: 100%;
+			height: auto;
+		}
+
+	}
+
+	@media all and (max-width:376px) {
+		width: 95%;
 	}
 
 }

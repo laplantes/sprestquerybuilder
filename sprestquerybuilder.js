@@ -37,19 +37,6 @@ const clearContainer = (containerToClear) => {
 };
 
 /**
- * Function for displaying a toast message
- * @param {string} title the title of the toast message
- * @param {string} message the message content
- */
-const showToast = (title=`Enter a title`, message=`Enter a message, even a short one, but a long one is ok as well.`) => {
-	document.getElementById('toast-title').innerText = title;
-	document.getElementById('toast-message').innerText = message;
-    const element = document.getElementById('toast')
-    element.classList.add('show');
-    setTimeout(() => { element.classList.remove('show'); }, 5000);
-}
-
-/**
  * 	Function takes in a type and an object with data, based on type the HTML string is built for the item and is returned
  * @param {string} type defines the type of action requested
  * @param {object} itemData data used to build the items HTML
@@ -171,7 +158,7 @@ const testUrl = (queryString) => {
 	if (testListName && testUrl) {
 		window.open(`${testUrl}/_api/web/lists/getByTitle('${testListName}')/items/${queryString}`);
 	} else {
-		showToast('Attention', 'Ensure all fields contain entries before attempting to test the query');
+		Snackbar.show({pos: 'bottom-center', actionText: 'X', actionTextColor: '#FFFFFF', text: 'Ensure all fields contain entries before attempting to test the query'});
 	}
 };
 
@@ -222,7 +209,8 @@ const createExpand = (parent, child) => {
 		// Increment the select counter		
 		expandCount++;
 	} else {
-		showToast(`Attention`, `Enter a column name to add to the Expand query`);
+		Snackbar.show({pos: 'bottom-center', actionText: 'X', actionTextColor: '#FFFFFF', text: 'Enter a column name to add to the Expand query'});
+
 	}
 
 	if (parent && child) {
@@ -263,7 +251,7 @@ const createSelect = (selectValue) => {
 		// Increment the select counter		
 		selectCount++;
 	} else {
-		showToast(`Attention`, `Enter a column name to add to the Select query`);
+		Snackbar.show({pos: 'bottom-center', actionText: 'X', actionTextColor: '#FFFFFF', text: 'Enter a column name to add to the Select query'});		
 	}
 };
 
@@ -282,7 +270,7 @@ document.getElementById('add-select-item').addEventListener('click', () => {
  */
 const createOrderby = (orderByValue, orderByOperator) => {
 		if (orderBy.columnName ? true : false) {
-		showToast(`Attention`, `OrderBy has already been assigned. Remove existing entry before reassigning.`);
+		Snackbar.show({pos: 'bottom-center', actionText: 'X', actionTextColor: '#FFFFFF', text: 'OrderBy has already been assigned. Remove existing entry before reassigning'});
 	} else {
 		if (orderByValue && orderByOperator) {
 			orderBy.columnName = orderByValue;
@@ -294,7 +282,8 @@ const createOrderby = (orderByValue, orderByOperator) => {
 			document.getElementById('orderby-column-name').value = ``;
 			document.getElementById('orderby-operator').value = ``;
 		} else {
-			showToast(`Attention`, `Ensure all fields contain entries to add orderby to the query`);
+			Snackbar.show({pos: 'bottom-center', actionText: 'X', actionTextColor: '#FFFFFF', text: 'Ensure all fields contain entries to add orderby to the query'});
+
 		}
 	}
 };
@@ -320,9 +309,11 @@ const createTop = (topValue) => {
 		document.getElementById(`close-top`).addEventListener('click', () => { newTopItem.remove(); topNumber = null; });
 		document.getElementById('top-number').value = 100;
 	} else if (topNumber < 1) {
-		showToast(`Attention`, `Value cannot be less than 1`);
+		Snackbar.show({pos: 'bottom-center', actionText: 'X', actionTextColor: '#FFFFFF', text: 'Value cannot be less than 1'});
+
 	} else {
-		showToast(`Attention`, `A Row Limit value has already been assigned. Remove the current Row Limit before adding a new value.`);
+		Snackbar.show({pos: 'bottom-center', actionText: 'X', actionTextColor: '#FFFFFF', text: 'A Row Limit value has already been assigned. Remove the current Row Limit before adding a new value'});
+
 	}
 }
 
@@ -370,7 +361,7 @@ document.getElementById('button-filter-close').addEventListener('click', () => {
  */
 const createQueryFilter = (columnName, operator, value, date, time) => {
 	if (value && (date || time)) {
-		showToast('Attention', 'Choose either a value -OR- a date and time')
+		Snackbar.show({pos: 'bottom-center', actionText: 'X', actionTextColor: '#FFFFFF', text: 'Choose either a value -OR- a date and time'});
 	} else if (columnName && operator && ( value && !(time || date) ) ) {
 		// validation passes for all required fields and the value field
 		insertText(`${columnName} ${operator} ${value}`, filterStringContainer);
@@ -386,7 +377,7 @@ const createQueryFilter = (columnName, operator, value, date, time) => {
 		document.getElementById('filter-time-value').value = '';
 	} else {
 		// Oh no, something isn't correct with the inputs
-		showToast('Attention', 'Ensure filter inputs has data entered correctly');
+		Snackbar.show({pos: 'bottom-center', actionText: 'X', actionTextColor: '#FFFFFF', text: 'Ensure filter inputs has data entered correctly'});
 	}
 };
 
@@ -414,10 +405,10 @@ const createFilter = (filterString) => {
 			document.getElementById(`close-filter`).addEventListener('click', () => { newFilterItem.remove(); filter = ''; filterCount = 0 });
 			filterCount++
 		} else {
-			showToast('Attention', 'Filter cannot be empty');
+			Snackbar.show({pos: 'bottom-center', actionText: 'X', actionTextColor: '#FFFFFF', text: 'Filter cannot be empty'});
 		}
 	} else {
-		showToast('Attention', 'A Filter value has already been assigned. Remove the current Filter before adding a new value.')
+		Snackbar.show({pos: 'bottom-center', actionText: 'X', actionTextColor: '#FFFFFF', text: 'A Filter value has already been assigned. Remove the current Filter before adding a new value'});
 	}	
 };
 
@@ -433,7 +424,7 @@ document.getElementById('filter-clear-all').addEventListener('click', () => {
 	if (clearConfirm) {
 		document.getElementById('filter-string').value = ``;
 	} else {
-		showToast('Info', 'Canceled');
+		Snackbar.show({pos: 'bottom-center', actionText: 'X', actionTextColor: '#FFFFFF', text: 'Canceled'});
 	}
 });
 
@@ -448,7 +439,7 @@ document.getElementById('query-clear').addEventListener('click', () => {
 		document.getElementById('query').innerText = '';
 		clearValues();
 	} else {
-		showToast('Info', 'Canceled');
+		Snackbar.show({pos: 'bottom-center', actionText: 'X', actionTextColor: '#FFFFFF', text: 'Canceled'});
 	}
 });
 
@@ -458,10 +449,10 @@ document.getElementById('copy-query').addEventListener('click', () => {
 	areaToCopy().then(async (copied) => {
 		try {
 			await navigator.clipboard.writeText(copied);
-			showToast(`Success`, `Query copied to the clipboard`);
+			Snackbar.show({pos: 'bottom-center', actionText: 'X', actionTextColor: '#FFFFFF', text: 'Query copied to the clipboard'});
 		}
 		catch (error) {
-			showToast(`Oh no`, `Query failed to copy to the clipboard`);
+			Snackbar.show({pos: 'bottom-center', actionText: 'X', actionTextColor: '#FFFFFF', text: 'Query failed to copy to the clipboard'});
 		}
 	});
 });
@@ -469,9 +460,9 @@ document.getElementById('copy-query').addEventListener('click', () => {
 // Click event for test url button
 document.getElementById('test-url-button').addEventListener('click', () => {
 	const generatedQueryString = document.getElementById('query').innerText;
-	if (generatedQueryString.length > 0) {
+	if (generatedQueryString.length > 1) {
 		testUrl(generatedQueryString);
 	} else {
-		showToast('Attention', 'Generate a query before attempting to test it');
+		Snackbar.show({pos: 'bottom-center', actionText: 'X', actionTextColor: '#FFFFFF', text: 'Generate a query before attempting to test it'});
 	}
 });

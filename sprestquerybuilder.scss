@@ -1,4 +1,5 @@
 @use './node_modules/initialize-css/dist/initialize';
+@use './node_modules/node-snackbar/dist/snackbar.min';
 @use 'base';
 @use 'settings';
 @use 'browsersupport.scss';

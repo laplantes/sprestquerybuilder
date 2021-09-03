@@ -36,5 +36,7 @@
     "gulp-terser": "^2.0.1",
     "initialize-css": "^1.4.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "node-snackbar": "^0.1.16"
+  }
 }

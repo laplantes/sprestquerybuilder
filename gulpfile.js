@@ -10,7 +10,7 @@ const gulp = require("gulp"),
 // define file locations
 const html = [".\\sprestquerybuilder.html"],
 	scss = [".\\sprestquerybuilder.scss"],
-	js = [".\\sprestquerybuilder.js"],
+	js = [".\\sprestquerybuilder.js", ".\\node_modules\\node-snackbar\\dist\\snackbar.min.js"],
 	images = [".\\important-red.svg"];
 
 let dest = ".\\devdist";

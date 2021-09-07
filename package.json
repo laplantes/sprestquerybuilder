@@ -4,8 +4,8 @@
   "description": "Build SharePoint REST queries",
   "main": "sprestquerybuilder.js",
   "scripts": {
-    "devDeploy": "gulp deployHtml deployScss deployJs",
-    "prodDeploy": "cross-env NODE_ENV=production gulp deployScss deployJs deployHtml",
+    "devDeploy": "gulp deployImages deployHtml deployScss deployJs",
+    "prodDeploy": "cross-env NODE_ENV=production gulp deployImages deployScss deployJs deployHtml",
     "live": "live-server --open=./devdist/sprestquerybuilder.html",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
